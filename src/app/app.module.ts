@@ -10,6 +10,7 @@ import { CardsPage } from '../pages/cards/cards';
 import { ContentPage } from '../pages/content/content';
 import { ItemCreatePage } from '../pages/item-create/item-create';
 import { ItemDetailPage } from '../pages/item-detail/item-detail';
+import { PhotoPage } from '../pages/photo/photo';
 import { ListMasterPage } from '../pages/list-master/list-master';
 import { LoginPage } from '../pages/login/login';
 import { MapPage } from '../pages/map/map';
@@ -20,6 +21,8 @@ import { SignupPage } from '../pages/signup/signup';
 import { TabsPage } from '../pages/tabs/tabs';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { WelcomePage } from '../pages/welcome/welcome';
+import { ActionPage } from '../pages/action/action';
+import { TabsWrapperPage } from '../pages/tabs-wrapper/tabs-wrapper';
 
 import { Api } from '../providers/api';
 import { Items } from '../mocks/providers/items';
@@ -76,7 +79,10 @@ let pages = [
   SignupPage,
   TabsPage,
   TutorialPage,
-  WelcomePage
+  WelcomePage,
+  PhotoPage,
+  ActionPage,
+  TabsWrapperPage
 ];
 
 export function declarations() {

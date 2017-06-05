@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 
 import { ItemCreatePage } from '../item-create/item-create';
-import { ItemDetailPage } from '../item-detail/item-detail';
+import { TabsWrapperPage } from '../tabs-wrapper/tabs-wrapper';
 
 import { Items } from '../../providers/providers';
 
@@ -30,13 +30,15 @@ export class ListMasterPage {
    * modal and then adds the new item to our data source if the user created one.
    */
   addItem() {
-    let addModal = this.modalCtrl.create(ItemCreatePage);
-    addModal.onDidDismiss(item => {
-      if (item) {
-        this.items.add(item);
-      }
-    })
-    addModal.present();
+    // let addModal = this.modalCtrl.create(ItemCreatePage);
+    // addModal.onDidDismiss(item => {
+    //   if (item) {
+    //     this.items.add(item);
+    //   }
+    // })
+    // addModal.present();
+    this.navCtrl.push(ItemCreatePage, {
+    });
   }
 
   /**
@@ -50,7 +52,7 @@ export class ListMasterPage {
    * Navigate to the detail page for this item.
    */
   openItem(item: Item) {
-    this.navCtrl.push(ItemDetailPage, {
+    this.navCtrl.push(TabsWrapperPage, {
       item: item
     });
   }

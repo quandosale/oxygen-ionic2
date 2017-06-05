@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
+import { ListMasterPage } from '../list-master/list-master';
 import { Items } from '../../providers/providers';
 
 @Component({
@@ -9,9 +10,20 @@ import { Items } from '../../providers/providers';
 })
 export class ItemDetailPage {
   item: any;
+  mode: Boolean = false;
 
   constructor(public navCtrl: NavController, navParams: NavParams, items: Items) {
     this.item = navParams.get('item') || items.defaultItem;
   }
-
+  play() {
+    console.log('play');
+    this.mode = true;
+  }
+  pause() {
+    console.log('pause');
+  }
+  stop() {
+    console.log('stop');
+    this.mode = false;
+  }
 }

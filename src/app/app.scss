@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/v2/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -14,3 +12,188 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+form.login {
+  display: block;
+  margin: 0 auto;
+  max-width: 500px;
+  padding: 6em 2em;
+  .logo-img {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    margin-bottom: 3em;
+  }
+  .input-group input {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.2em;
+    padding: 0.5em;
+    margin-bottom: 0.9em;
+    width: 100%;
+  }
+  .input-group {
+    padding: 0 0.7em;
+    button {
+      margin-top: 1.4em;
+    }
+  }
+  button {
+    height: 2.4em !important;
+    font-size: 1.2em !important;
+    background: #188b37;
+    span {
+      text-transform: uppercase;
+    }
+  }
+  .button-md-primary.activated,
+  .button-ios-primary.activated {
+    background-color: #2a9447;
+  }
+}
+
+ion-title {
+  text-align: center;
+}
+
+form.create-form {
+  padding-right: 0.7em;
+  margin-top: 1.6em;
+  .item-input.input-has-focus .item-inner {
+    border-bottom: 1px solid #cccccc !important;
+    box-shadow: none;
+  }
+  .item-input.input-has-focus:last-child .item-inner {
+    border-bottom: 0px !important;
+  }
+  .item-input.input-has-focus:last-child,
+  .item-input:last-child {
+    border-bottom: none;
+    box-shadow: none;
+  }
+  ion-list {
+    margin-left: 0.7em;
+    border-radius: 2px;
+    border: solid 1px #cccccc;
+    ion-item {
+      padding-left: 0px;
+    }
+  }
+  .item-input .item-inner {
+    padding-left: 10px;
+  }
+  .list-ios>.item-block:first-child {
+    border-top: 0px;
+  }
+}
+
+.tempo {
+  margin-right: 0.7em;
+  margin-left: 0.7em;
+  margin-top: 1.6em;
+  border: solid 1px #cccccc;
+  border-radius: 3px;
+  text-align: center;
+  .profile {
+    border-bottom: solid 1px #cccccc;
+    padding-top: 0.7em;
+    padding-bottom: 1em;
+    img {
+      width: 3em;
+      border-radius: 50%;
+    }
+    h1 {
+      color: #242625;
+      font-weight: bold;
+      margin-top: 0.7rem;
+      font-size: 2.5em;
+    }
+    h3 {
+      color: #242625;
+      font-size: 1.3em;
+      font-weight: 400;
+    }
+  }
+  .timer {
+    color: #242625;
+    background: #f8f8f8;
+    text-align: center;
+    font-size: 2.5em;
+    padding: 0.6em 0;
+    .counter {
+      font-weight: 500;
+    }
+  }
+  .timer-control {
+    h3 {
+      font-size: 1.3em;
+      font-weight: 400;
+    }
+    img {
+      display: block;
+      margin: 0 auto;
+      margin-bottom: 0.6em;
+      height: 5.7em;
+    }
+    ion-row {
+      padding: 2rem 0 0.1rem;
+    }
+  }
+}
+
+.photo-button-group {
+  text-align: center;
+  ion-icon {
+    font-size: 1.5em;
+  }
+  button {
+    width: 50%;
+    margin: 0px;
+  }
+  .button-md {
+    box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.14), 0 3px 0px -2px rgba(0, 0, 0, 0.2), 0 1px 0px 0 rgba(0, 0, 0, 0.12);
+  }
+  button:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -0.25em;
+  }
+  button:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.photo-item {
+  width: 50%;
+  float: left;
+  position: relative;
+  img {
+    width: 100%;
+  }
+  ion-checkbox {
+    position: absolute;
+    right: 2px;
+    bottom: 4px;
+  }
+}
+
+.photo-item:nth-child(odd) {
+  padding-right: 2px;
+}
+
+.photo-item:nth-child(even) {
+  padding-left: 2px;
+}
+
+.clearfix {
+  clear: both;
+}
+
+.popover-content {
+  top: 15px !important;
+  right: 15px !important;
+  left: initial !important;
+  max-width: 180px;
+  transform-origin: right top 0px !important;
+}

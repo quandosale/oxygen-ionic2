@@ -1,0 +1,62 @@
+<ion-content>
+
+  <div padding class="photo-button-group">
+    <button ion-button (click)="fromCamera()">
+        Nuova
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <ion-icon name="add"></ion-icon>
+    </button>
+    
+    <button ion-button (click)="fromGallery()">
+        Rullino 
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <ion-icon name="attach"></ion-icon>
+    </button>
+  </div>
+  <input type="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)" />
+  <div class="photo-list">
+    <div class="photo-item">
+      <ion-checkbox [(ngModel)]="check"></ion-checkbox>
+      <img src="assets/img/car.png" alt="" (click)="selectPhoto()">
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+      <ion-checkbox checked="true"></ion-checkbox>
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+      <ion-checkbox checked="true"></ion-checkbox>
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+      <ion-checkbox checked="false"></ion-checkbox>
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+      <ion-checkbox checked="false"></ion-checkbox>
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+      <ion-checkbox checked="true"></ion-checkbox>
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+      <ion-checkbox checked="true"></ion-checkbox>
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+      <ion-checkbox checked="false"></ion-checkbox>
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+      <ion-checkbox checked="true"></ion-checkbox>
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+    </div>
+    <div class="photo-item">
+      <img src="assets/img/car.png" alt="">
+    </div>
+  </div>
+
+</ion-content>
