@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Nuova pratica</ion-title>
+    <ion-title>{{!editMode ? 'Nuova pratica' : 'Edit practica'}}</ion-title>
     <ion-buttons end style="margin-top: 3px">
       <button ion-button (click)="done()" [disabled]="!isReadyToSave" strong>
         <span color="primary">
@@ -19,35 +19,24 @@
     <ion-list>
       <ion-item>
         <ion-label>Targa:</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" formControlName="targa" [(ngModel)]="item.targa"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Marca:</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" formControlName="marca" [(ngModel)]="item.marca"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Modello:</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" formControlName="modello" [(ngModel)]="item.modello"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Nome:</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" formControlName="nome" [(ngModel)]="item.nome"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Cognome:</ion-label>
-        <ion-input type="text"></ion-input>
+        <ion-input type="text" formControlName="cognome" [(ngModel)]="item.cognome"></ion-input>
       </ion-item>
     </ion-list>
   </form>
-
-  <input type="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)" />
-  <div class="profile-image-wrapper" (click)="getPicture()">
-    <div class="profile-image-placeholder" *ngIf="!this.form.controls.profilePic.value">
-      <ion-icon name="add"></ion-icon>
-      <div>
-        {{ 'ITEM_CREATE_CHOOSE_IMAGE' | translate }}
-      </div>
-    </div>
-    <div class="profile-image" [style.backgroundImage]="getProfileImageStyle()" *ngIf="this.form.controls.profilePic.value"></div>
-  </div>
 </ion-content>

@@ -13,7 +13,8 @@ export class ItemDetailPage {
   mode: Boolean = false;
 
   constructor(public navCtrl: NavController, navParams: NavParams, items: Items) {
-    this.item = navParams.get('item') || items.defaultItem;
+    this.item = navParams.get('item');
+    console.log(this.item);
   }
   play() {
     console.log('play');

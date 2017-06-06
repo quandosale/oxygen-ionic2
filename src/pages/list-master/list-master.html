@@ -18,12 +18,15 @@
   <ion-list>
     <ion-item-sliding *ngFor="let item of currentItems">
       <button ion-item (click)="openItem(item)">
-        <ion-avatar item-start>
-          <img [src]="item.profilePic" />
+        <ion-avatar item-start class="item-avatar android" showWhen="android">
+          01
         </ion-avatar>
-        <h2 style="color: #188b37; font-size: 1.9rem;">{{item.name}}</h2>
-        <p style="color: black">{{item.about}}</p>
-        <ion-note item-end *ngIf="item.note">{{item.note}}</ion-note>
+        <ion-avatar item-start class="item-avatar ios" showWhen="ios">
+          01
+        </ion-avatar>
+        <h2 style="color: #188b37; font-size: 1.9rem;">{{item.targa}}</h2>
+        <p style="color: black">{{item.marca}}</p>
+        <ion-note item-end *ngIf="item.note">{{item.Modello}}</ion-note>
       </button>
 
       <ion-item-options>

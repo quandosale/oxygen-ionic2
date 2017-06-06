@@ -15,7 +15,7 @@ export class PhotoPage {
     item: any;
 
     constructor(public navCtrl: NavController, navParams: NavParams, items: Items, private camera: Camera) {
-        this.item = navParams.get('item') || items.defaultItem;
+        this.item = navParams.get('item');
         console.log(this.item);
     }
 
@@ -33,7 +33,7 @@ export class PhotoPage {
             // imageData is either a base64 encoded string or a file URI
             // If it's base64:
             let base64Image = 'data:image/jpeg;base64,' + imageData;
-            console.log(base64Image);
+            this.item.photo.push(base64Image);
         }, (err) => {
             // Handle error
         });
@@ -42,14 +42,13 @@ export class PhotoPage {
     processWebImage(event) {
         let reader = new FileReader();
         reader.onload = (readerEvent) => {
-
             let imageData = (readerEvent.target as any).result;
-
+            this.item.photo.push(imageData);
         };
 
         reader.readAsDataURL(event.target.files[0]);
     }
-    selectPhoto() {
+    selectPhoto(i) {
         this.check = !this.check;
     }
 }

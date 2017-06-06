@@ -25,7 +25,7 @@ import { ActionPage } from '../pages/action/action';
 import { TabsWrapperPage } from '../pages/tabs-wrapper/tabs-wrapper';
 
 import { Api } from '../providers/api';
-import { Items } from '../mocks/providers/items';
+import { Items } from '../providers/items';
 import { Settings } from '../providers/settings';
 import { User } from '../providers/user';
 

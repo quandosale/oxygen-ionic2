@@ -14,48 +14,10 @@
     </button>
   </div>
   <input type="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)" />
-  <div class="photo-list">
-    <div class="photo-item">
+  <div class="photo-list" *ngIf="item.photo">
+    <div class="photo-item" *ngFor="let photo of item.photo; let i = index;">
       <ion-checkbox [(ngModel)]="check"></ion-checkbox>
-      <img src="assets/img/car.png" alt="" (click)="selectPhoto()">
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
-      <ion-checkbox checked="true"></ion-checkbox>
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
-      <ion-checkbox checked="true"></ion-checkbox>
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
-      <ion-checkbox checked="false"></ion-checkbox>
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
-      <ion-checkbox checked="false"></ion-checkbox>
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
-      <ion-checkbox checked="true"></ion-checkbox>
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
-      <ion-checkbox checked="true"></ion-checkbox>
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
-      <ion-checkbox checked="false"></ion-checkbox>
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
-      <ion-checkbox checked="true"></ion-checkbox>
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
-    </div>
-    <div class="photo-item">
-      <img src="assets/img/car.png" alt="">
+      <img [src]="photo" alt="" (click)="selectPhoto(i)">
     </div>
   </div>
 

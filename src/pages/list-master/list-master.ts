@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
 
 import { ItemCreatePage } from '../item-create/item-create';
 import { TabsWrapperPage } from '../tabs-wrapper/tabs-wrapper';
@@ -15,8 +16,10 @@ import { Item } from '../../models/item';
 export class ListMasterPage {
   currentItems: Item[];
 
-  constructor(public navCtrl: NavController, public items: Items, public modalCtrl: ModalController) {
-    this.currentItems = this.items.query();
+  constructor(public navCtrl: NavController, public items: Items, public modalCtrl: ModalController, public alertCtrl: AlertController) {
+    this.items.load().then(res => {
+      this.currentItems = res;
+    });
   }
 
   /**
@@ -42,18 +45,33 @@ export class ListMasterPage {
   }
 
   /**
-   * Delete an item from the list of items.
-   */
-  deleteItem(item) {
-    this.items.delete(item);
-  }
-
-  /**
    * Navigate to the detail page for this item.
    */
   openItem(item: Item) {
     this.navCtrl.push(TabsWrapperPage, {
       item: item
     });
+  }
+
+  deleteItem(item) {
+    let confirm = this.alertCtrl.create({
+      title: 'Delete this practica?',
+      message: 'Are you sure to delete this practica?\nYou won\'t be able to revert this action again.',
+      buttons: [
+        {
+          text: 'Delete',
+          handler: () => {
+            this.items.delete(item);
+          }
+        },
+        {
+          text: 'Cancel',
+          handler: () => {
+            
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 }

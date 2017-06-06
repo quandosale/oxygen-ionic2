@@ -1,8 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { NavController, ViewController } from 'ionic-angular';
+import { NavController, ViewController, NavParams } from 'ionic-angular';
 
 import { Camera } from '@ionic-native/camera';
+
+import { Items } from '../../providers/providers';
 
 
 @Component({
@@ -15,15 +17,29 @@ export class ItemCreatePage {
   isReadyToSave: boolean;
 
   item: any;
+  editMode: Boolean = false;
 
   form: FormGroup;
 
-  constructor(public navCtrl: NavController, public viewCtrl: ViewController, formBuilder: FormBuilder, public camera: Camera) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, formBuilder: FormBuilder, public camera: Camera, public items: Items) {
     this.form = formBuilder.group({
-      profilePic: [''],
-      name: ['', Validators.required],
-      about: ['']
+      targa: ['', Validators.required],
+      marca: ['', Validators.required],
+      modello: ['', Validators.required],
+      nome: ['', Validators.required],
+      cognome: ['', Validators.required]
     });
+    this.item = {
+      targa: '',
+      marca: '',
+      modello: '',
+      nome: '',
+      cognome: ''
+    };
+    if (navParams.get('item')) {
+      this.item = navParams.get('item');
+      this.editMode = true;
+    }
 
     // Watch the form for changes, and
     this.form.valueChanges.subscribe((v) => {
@@ -79,6 +95,15 @@ export class ItemCreatePage {
    */
   done() {
     if (!this.form.valid) { return; }
-    this.viewCtrl.dismiss(this.form.value);
+    if (!this.editMode) {
+      this.item.photo = [];
+      this.items.add(this.item).then(res => {
+        this.viewCtrl.dismiss(this.form.value);
+      });
+    } else {
+      this.items.edit(this.item).then(res => {
+        this.viewCtrl.dismiss(this.form.value);
+      })
+    }
   }
 }

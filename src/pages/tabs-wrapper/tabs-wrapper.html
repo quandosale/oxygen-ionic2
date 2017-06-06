@@ -3,7 +3,7 @@
     <ion-title>{{tabTitle}}</ion-title>
 
     <ion-buttons end style="margin-top: 3px" *ngIf="tabTitle!='Foto'">
-      <button ion-button (click)="done()" [disabled]="!isReadyToSave" strong>
+      <button ion-button (click)="editItem()" strong>
         <span color="primary">
           Edit
         </span>
