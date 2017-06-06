@@ -33,7 +33,10 @@ export class PhotoPage {
             // imageData is either a base64 encoded string or a file URI
             // If it's base64:
             let base64Image = 'data:image/jpeg;base64,' + imageData;
+            if (this.item.photo == undefined)
+                this.item.photo = [];
             this.item.photo.push(base64Image);
+            
         }, (err) => {
             // Handle error
         });
@@ -43,6 +46,8 @@ export class PhotoPage {
         let reader = new FileReader();
         reader.onload = (readerEvent) => {
             let imageData = (readerEvent.target as any).result;
+            if (this.item.photo == undefined)
+                this.item.photo = [];
             this.item.photo.push(imageData);
         };
 

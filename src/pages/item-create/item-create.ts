@@ -5,6 +5,7 @@ import { NavController, ViewController, NavParams } from 'ionic-angular';
 import { Camera } from '@ionic-native/camera';
 
 import { Items } from '../../providers/providers';
+import { Item } from '../../models/item';
 
 
 @Component({
@@ -16,26 +17,21 @@ export class ItemCreatePage {
 
   isReadyToSave: boolean;
 
-  item: any;
+  item: Item;
   editMode: Boolean = false;
 
   form: FormGroup;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, formBuilder: FormBuilder, public camera: Camera, public items: Items) {
     this.form = formBuilder.group({
-      targa: ['', Validators.required],
-      marca: ['', Validators.required],
-      modello: ['', Validators.required],
-      nome: ['', Validators.required],
-      cognome: ['', Validators.required]
+      Targa: ['', Validators.required],
+      Marca: ['', Validators.required],
+      Modello: ['', Validators.required],
+      Nome: ['', Validators.required],
+      Cognome: ['', Validators.required]
     });
-    this.item = {
-      targa: '',
-      marca: '',
-      modello: '',
-      nome: '',
-      cognome: ''
-    };
+    this.item = new Item();
+
     if (navParams.get('item')) {
       this.item = navParams.get('item');
       this.editMode = true;
@@ -96,7 +92,6 @@ export class ItemCreatePage {
   done() {
     if (!this.form.valid) { return; }
     if (!this.editMode) {
-      this.item.photo = [];
       this.items.add(this.item).then(res => {
         this.viewCtrl.dismiss(this.form.value);
       });

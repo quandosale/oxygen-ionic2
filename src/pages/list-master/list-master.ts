@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
-import { AlertController } from 'ionic-angular';
+import { AlertController, ToastController } from 'ionic-angular';
+import { Platform } from 'ionic-angular';
 
 import { ItemCreatePage } from '../item-create/item-create';
 import { TabsWrapperPage } from '../tabs-wrapper/tabs-wrapper';
 
 import { Items } from '../../providers/providers';
-
 import { Item } from '../../models/item';
+
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 @Component({
   selector: 'page-list-master',
@@ -16,9 +18,15 @@ import { Item } from '../../models/item';
 export class ListMasterPage {
   currentItems: Item[];
 
-  constructor(public navCtrl: NavController, public items: Items, public modalCtrl: ModalController, public alertCtrl: AlertController) {
+  constructor(public plt: Platform, public navCtrl: NavController, public items: Items, public modalCtrl: ModalController, public alertCtrl: AlertController, private backgroundMode: BackgroundMode, private toastCtrl: ToastController) {
     this.items.load().then(res => {
       this.currentItems = res;
+    });
+    this.backgroundMode.enable();
+    localStorage.setItem('exitOnceAgain', '0');
+
+    this.plt.registerBackButtonAction(() => {
+      this.onBack();
     });
   }
 
@@ -33,13 +41,6 @@ export class ListMasterPage {
    * modal and then adds the new item to our data source if the user created one.
    */
   addItem() {
-    // let addModal = this.modalCtrl.create(ItemCreatePage);
-    // addModal.onDidDismiss(item => {
-    //   if (item) {
-    //     this.items.add(item);
-    //   }
-    // })
-    // addModal.present();
     this.navCtrl.push(ItemCreatePage, {
     });
   }
@@ -67,11 +68,29 @@ export class ListMasterPage {
         {
           text: 'Cancel',
           handler: () => {
-            
+
           }
         }
       ]
     });
     confirm.present();
+  }
+  onBack() {
+    this.presentToast();
+    if(localStorage.getItem('exitOnceAgain') == '1') {
+      this.plt.exitApp();
+    } else {
+      setTimeout(function() {
+        localStorage.setItem('exitOnceAgain', '0');
+      }, 3000);
+    }
+    localStorage.setItem('exitOnceAgain', '1');
+  } 
+  presentToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Press back button again to exit',
+      duration: 3000
+    });
+    toast.present();
   }
 }

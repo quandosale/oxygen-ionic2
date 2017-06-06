@@ -1,30 +1,73 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
+import { Platform } from 'ionic-angular';
 
 import { ListMasterPage } from '../list-master/list-master';
-import { Items } from '../../providers/providers';
+import { Items, Timer } from '../../providers/providers';
 
 @Component({
   selector: 'page-item-detail',
   templateUrl: 'item-detail.html'
 })
-export class ItemDetailPage {
+export class ItemDetailPage implements OnInit {
   item: any;
   mode: Boolean = false;
+  counterSubscription: any;
 
-  constructor(public navCtrl: NavController, navParams: NavParams, items: Items) {
+  counterText: String = '00:00:00';
+
+  constructor(public navCtrl: NavController, navParams: NavParams, items: Items, public timer: Timer, public alertCtrl: AlertController) {
     this.item = navParams.get('item');
-    console.log(this.item);
   }
+
+  ngOnInit() {
+    this.counterSubscription = this.timer.timerListner().subscribe(counter => {
+      this.counterText = this.formatCounter(counter);
+    })
+  }
+
   play() {
-    console.log('play');
+    this.timer.start();
     this.mode = true;
   }
   pause() {
-    console.log('pause');
+    this.timer.pause();
+    this.mode = false;
   }
   stop() {
-    console.log('stop');
+    this.timer.pause();
+    let confirm = this.alertCtrl.create({
+      title: 'Want to save this?',
+      message: 'Do you want to save this?',
+      buttons: [
+        {
+          text: 'No',
+          handler: () => {
+            this._stop();
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this._stop();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+  _stop() {
+    this.timer.stop();
     this.mode = false;
+  }
+
+  ngOnDestroy() {
+    this.timer.unsubscribe();
+  }
+  formatCounter(counter) {
+    var date = new Date(1970, 0, 1);
+    date.setSeconds(counter);
+    return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
   }
 }

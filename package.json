@@ -20,6 +20,7 @@
         "@angular/http": "4.1.2",
         "@angular/platform-browser": "4.1.2",
         "@angular/platform-browser-dynamic": "4.1.2",
+        "@ionic-native/background-mode": "^3.12.1",
         "@ionic-native/camera": "^3.10.3",
         "@ionic-native/core": "3.10.2",
         "@ionic-native/google-maps": "^3.10.3",
@@ -29,6 +30,7 @@
         "@ngx-translate/core": "^6.0.1",
         "@ngx-translate/http-loader": "0.0.3",
         "cordova-android": "^6.2.3",
+        "cordova-plugin-background-mode": "^0.7.2",
         "cordova-plugin-camera": "^2.4.1",
         "cordova-plugin-compat": "^1.1.0",
         "cordova-plugin-console": "^1.0.5",
@@ -58,7 +60,8 @@
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
             "ionic-plugin-keyboard": {},
-            "cordova-plugin-camera": {}
+            "cordova-plugin-camera": {},
+            "cordova-plugin-background-mode": {}
         },
         "platforms": [
             "android"

@@ -28,11 +28,13 @@ import { Api } from '../providers/api';
 import { Items } from '../providers/items';
 import { Settings } from '../providers/settings';
 import { User } from '../providers/user';
+import { Timer } from '../providers/timer';
 
 import { Camera } from '@ionic-native/camera';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -101,7 +103,9 @@ export function providers() {
     Camera,
     GoogleMaps,
     SplashScreen,
+    Timer,
     StatusBar,
+    BackgroundMode,
 
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
