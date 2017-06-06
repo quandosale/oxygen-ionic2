@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { AlertController, ToastController } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
@@ -15,7 +15,7 @@ import { BackgroundMode } from '@ionic-native/background-mode';
   selector: 'page-list-master',
   templateUrl: 'list-master.html'
 })
-export class ListMasterPage {
+export class ListMasterPage implements OnInit {
   currentItems: Item[];
 
   constructor(public plt: Platform, public navCtrl: NavController, public items: Items, public modalCtrl: ModalController, public alertCtrl: AlertController, private backgroundMode: BackgroundMode, private toastCtrl: ToastController) {
@@ -23,19 +23,25 @@ export class ListMasterPage {
       this.currentItems = res;
     });
     this.backgroundMode.enable();
-    localStorage.setItem('exitOnceAgain', '0');
-
-    this.plt.registerBackButtonAction(() => {
-      this.onBack();
-    });
+    console.log('list-master', 'constructor');
   }
 
+  ngOnInit() {
+    console.log('list-master', 'ngOnInit');
+  }
   /**
    * The view loaded, let's query our items for the list
    */
   ionViewDidLoad() {
   }
 
+  ionViewWillEnter() {
+    localStorage.setItem('exitOnceAgain', '0');
+    console.log('list-master', 'ionViewWillEnter');
+    this.plt.registerBackButtonAction(() => {
+      this.onBack();
+    });
+  }
   /**
    * Prompt the user to add a new item. This shows our ItemCreatePage in a
    * modal and then adds the new item to our data source if the user created one.
@@ -76,16 +82,17 @@ export class ListMasterPage {
     confirm.present();
   }
   onBack() {
+    console.log('onback', 'list-master');
     this.presentToast();
-    if(localStorage.getItem('exitOnceAgain') == '1') {
+    if (localStorage.getItem('exitOnceAgain') == '1') {
       this.plt.exitApp();
     } else {
-      setTimeout(function() {
+      setTimeout(function () {
         localStorage.setItem('exitOnceAgain', '0');
       }, 3000);
     }
     localStorage.setItem('exitOnceAgain', '1');
-  } 
+  }
   presentToast() {
     let toast = this.toastCtrl.create({
       message: 'Press back button again to exit',

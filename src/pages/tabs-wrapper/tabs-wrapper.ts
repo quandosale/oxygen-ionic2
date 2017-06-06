@@ -50,6 +50,7 @@ export class TabsWrapperPage {
     });
   }
   onBack() {
+    console.log('onback', 'tab-wrapper');
     if(localStorage.getItem('timer_working') != '1') {
       this.navCtrl.pop();
       return;
