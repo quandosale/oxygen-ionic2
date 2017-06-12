@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { NavController, ViewController, NavParams } from 'ionic-angular';
-
+import { LoadingController, Loading } from 'ionic-angular';
 import { Camera } from '@ionic-native/camera';
 
 import { Items } from '../../providers/providers';
@@ -19,10 +19,10 @@ export class ItemCreatePage {
 
   item: Item;
   editMode: Boolean = false;
-
+  loader: Loading;
   form: FormGroup;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, formBuilder: FormBuilder, public camera: Camera, public items: Items) {
+  constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, formBuilder: FormBuilder, public camera: Camera, public items: Items) {
     this.form = formBuilder.group({
       Targa: ['', Validators.required],
       Marca: ['', Validators.required],
@@ -34,6 +34,7 @@ export class ItemCreatePage {
 
     if (navParams.get('item')) {
       this.item = navParams.get('item');
+      console.log(this.item);
       this.editMode = true;
     }
 
@@ -82,7 +83,7 @@ export class ItemCreatePage {
    * The user cancelled, so we dismiss without sending data back.
    */
   cancel() {
-    this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss({ res: false });
   }
 
   /**
@@ -91,13 +92,21 @@ export class ItemCreatePage {
    */
   done() {
     if (!this.form.valid) { return; }
+
+    this.loader = this.loadingCtrl.create({
+      content: "Saving..."
+    });
+    this.loader.present();
     if (!this.editMode) {
-      this.items.add(this.item).then(res => {
-        this.viewCtrl.dismiss(this.form.value);
-      });
+      this.items.add(this.item)
+        .then(res => {
+          this.loader.dismiss();
+          this.viewCtrl.dismiss(res);
+        });
     } else {
       this.items.edit(this.item).then(res => {
-        this.viewCtrl.dismiss(this.form.value);
+        this.loader.dismiss();
+        this.viewCtrl.dismiss(res);
       })
     }
   }

@@ -1,5 +1,7 @@
+import { Observable } from 'rxjs/Rx';
+import { Items } from '../../providers/items';
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { NavController, NavParams, PopoverController,ModalController } from 'ionic-angular';
 
 import { AlertController } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
@@ -13,15 +15,25 @@ import { ItemCreatePage } from '../item-create/item-create';
 export class TabsWrapperPage {
   @ViewChild('Navbar') navBar: any;
 
+  selectedPhotoes: Array<any> = [];
   protected tabTitle: string = "";
   item: any;
 
-  constructor(public plt: Platform, public navCtrl: NavController, public navParams: NavParams, public popoverCtrl: PopoverController, public alertCtrl: AlertController) {
+  constructor(public items: Items,public modalCtrl: ModalController, public plt: Platform, public navCtrl: NavController, public navParams: NavParams, public popoverCtrl: PopoverController, public alertCtrl: AlertController) {
     this.item = navParams.get('item');
+  }
+  ngOnInit() {
+    this.items.selectedPhotoListner().subscribe(res => {
+      this.selectedPhotoes = res;
+    });
+
+  }
+  ngOnDestroy() { 
+    this.items.unsubscribe();
   }
   ionViewDidLoad() {
     console.log(this.navBar);
-    
+
     this.plt.registerBackButtonAction(() => {
       this.onBack();
     });
@@ -34,7 +46,7 @@ export class TabsWrapperPage {
     this.tabTitle = tabTitle;
   }
   presentPopover() {
-    let popover = this.popoverCtrl.create(ActionPage);
+    let popover = this.popoverCtrl.create(ActionPage, {photoes: this.selectedPhotoes});
     popover.present();
   }
   editItem() {
@@ -45,13 +57,13 @@ export class TabsWrapperPage {
     //   }
     // })
     // addModal.present();
-    this.navCtrl.push(ItemCreatePage, {
-      item: this.item
-    });
+
+    let modal = this.modalCtrl.create(ItemCreatePage, { item: this.item });
+    modal.present();
   }
   onBack() {
     console.log('onback', 'tab-wrapper');
-    if(localStorage.getItem('timer_working') != '1') {
+    if (localStorage.getItem('timer_working') != '1') {
       this.navCtrl.pop();
       return;
     }

@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { NavController, ModalController } from 'ionic-angular';
+import { Loading, ModalController, NavController } from 'ionic-angular';
 import { AlertController, ToastController } from 'ionic-angular';
+import { LoadingController } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 
 import { ItemCreatePage } from '../item-create/item-create';
@@ -17,17 +18,23 @@ import { BackgroundMode } from '@ionic-native/background-mode';
 })
 export class ListMasterPage implements OnInit {
   currentItems: Item[];
+  loader: Loading;
 
-  constructor(public plt: Platform, public navCtrl: NavController, public items: Items, public modalCtrl: ModalController, public alertCtrl: AlertController, private backgroundMode: BackgroundMode, private toastCtrl: ToastController) {
-    this.items.load().then(res => {
-      this.currentItems = res;
-    });
-    this.backgroundMode.enable();
-    console.log('list-master', 'constructor');
+  constructor(public loadingCtrl: LoadingController, public plt: Platform, public navCtrl: NavController, public items: Items, public modalCtrl: ModalController, public alertCtrl: AlertController, private backgroundMode: BackgroundMode, private toastCtrl: ToastController) {
+
   }
 
   ngOnInit() {
-    console.log('list-master', 'ngOnInit');
+    this.loader = this.loadingCtrl.create({
+      content: "Loading..."
+    });
+    this.loader.present();
+
+    this.items.load().then(res => {
+      this.currentItems = res;
+      this.loader.dismiss();
+    });
+    this.backgroundMode.enable();
   }
   /**
    * The view loaded, let's query our items for the list
@@ -47,8 +54,14 @@ export class ListMasterPage implements OnInit {
    * modal and then adds the new item to our data source if the user created one.
    */
   addItem() {
-    this.navCtrl.push(ItemCreatePage, {
-    });
+    // this.navCtrl.push(ItemCreatePage, {
+    // });
+    let modal = this.modalCtrl.create(ItemCreatePage);
+    modal.onDidDismiss(data => {
+      if (data.success)
+        this.currentItems.unshift(data.data);
+    })
+    modal.present();
   }
 
   /**

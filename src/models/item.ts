@@ -9,28 +9,33 @@
  */
 export class Item {
 
-  ID: Number = 908;
-  Note: any = null;
+  ID: Number;
+  Note: any;
   Nome: String = "";
   Cognome: String = "";
-  RagioneSociale: any = null;
-  Telefono: any = null;
+  RagioneSociale: any;
+  Telefono: any;
   Targa: String = "";
   Marca: String = "";
   Modello: String = "";
-  IdPratica: Number = 9665;
-  DataPrenotazione: Date = new Date();
-  DataAccettazione: Date = new Date();
-  DataConsegna: any = null;
-  DataConsegnaPrevista: any = null;
-  DataUltimazione: any = null;
-  DataInizioLavorazione: any = null;
-  DataInserimento: Date = new Date();
-  Stato: Number = 2;
-  Scaduta: Boolean = false;
-  TempoRimastoPercentuale: Number = 10;
+  Lavorazione: Lavorazione;
 
   constructor() {
   }
 
+}
+export class Lavorazione {
+  ID: number;
+  IdPratica: Number;
+  DataPrenotazione: Date;
+  DataAccettazione: Date;
+  DataConsegna: any;
+  DataConsegnaPrevista: any;
+  DataUltimazione: any;
+  DataInizioLavorazione: any;
+  DataInserimento: Date;
+  note: String;
+  Stato: Number;
+  Scaduta: Boolean;
+  TempoRimastoPercentuale: Number;
 }

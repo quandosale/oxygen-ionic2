@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
  */
 @Injectable()
 export class Api {
-  url: string = 'https://example.com/api/v1';
+  url: string = 'http://oxygen2.ilcarrozziere.it/Api';
 
   constructor(public http: Http) {
   }
@@ -32,6 +32,7 @@ export class Api {
   }
 
   post(endpoint: string, body: any, options?: RequestOptions) {
+    console.log(body);
     return this.http.post(this.url + '/' + endpoint, body, options);
   }
 

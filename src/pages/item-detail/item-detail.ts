@@ -1,6 +1,6 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { AlertController } from 'ionic-angular';
+import { AlertController, LoadingController, Loading } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 
 import { ListMasterPage } from '../list-master/list-master';
@@ -14,20 +14,28 @@ export class ItemDetailPage implements OnInit {
   item: any;
   mode: Boolean = false;
   counterSubscription: any;
+  loading: Loading;
 
+  counter: Number;
   counterText: String = '00:00:00';
+  startTime: Date;
 
-  constructor(public navCtrl: NavController, navParams: NavParams, items: Items, public timer: Timer, public alertCtrl: AlertController) {
+  constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, navParams: NavParams, public items: Items, public timer: Timer, public alertCtrl: AlertController) {
     this.item = navParams.get('item');
   }
 
   ngOnInit() {
     this.counterSubscription = this.timer.timerListner().subscribe(counter => {
       this.counterText = this.formatCounter(counter);
+      this.counter = counter;
     })
   }
 
   play() {
+    if (this.timer.getCounter() == 0) {
+      console.log()
+    }
+    this.startTime = new Date();
     this.timer.start();
     this.mode = true;
   }
@@ -50,6 +58,12 @@ export class ItemDetailPage implements OnInit {
         {
           text: 'Yes',
           handler: () => {
+            this.loading = this.loadingCtrl.create({ content: 'Saving...' });
+            this.loading.present();
+            this.items.addLavo(this.item, this.startTime, this.counter).then((res) => {
+              console.log(res.data);
+              this.loading.dismiss();
+            });
             this._stop();
           }
         }

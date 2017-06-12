@@ -6,6 +6,7 @@ import { ListMasterPage } from '../../pages/list-master/list-master';
 import { User } from '../../providers/user';
 
 import { TranslateService } from '@ngx-translate/core';
+import { Settings } from '../../providers/settings';
 
 
 @Component({
@@ -16,10 +17,10 @@ export class LoginPage {
   // The account fields for the login form.
   // If you're using the username field with or without email, make
   // sure to add it to the type
-  account: { email: string, username:string, password: string } = {
+  account: { email: string, username: string, password: string } = {
     email: 'test@example.com',
-    username: '',
-    password: ''
+    username: 'fabio',
+    password: 'fabio'
   };
 
   // Our translated text strings
@@ -28,7 +29,8 @@ export class LoginPage {
   constructor(public navCtrl: NavController,
     public user: User,
     public toastCtrl: ToastController,
-    public translateService: TranslateService) {
+    public translateService: TranslateService,
+    public settingsService: Settings) {
 
     this.translateService.get('LOGIN_ERROR').subscribe((value) => {
       this.loginErrorString = value;
@@ -37,17 +39,20 @@ export class LoginPage {
 
   // Attempt to login in through our User service
   doLogin() {
-    this.user.login(this.account).subscribe((resp) => {
+    this.settingsService.setAuth(this.account.username, this.account.password).then(res => {
       this.navCtrl.setRoot(ListMasterPage)
-    }, (err) => {
-      this.navCtrl.setRoot(ListMasterPage)
-      // Unable to log in
-      // let toast = this.toastCtrl.create({
-      //   message: this.loginErrorString,
-      //   duration: 3000,
-      //   position: 'top'
-      // });
-      // toast.present();
     });
+    // this.user.login(this.account).subscribe((resp) => {
+
+    // }, (err) => {
+    //   this.navCtrl.setRoot(ListMasterPage)
+    // Unable to log in
+    // let toast = this.toastCtrl.create({
+    //   message: this.loginErrorString,
+    //   duration: 3000,
+    //   position: 'top'
+    // });
+    // toast.present();
+    // });
   }
 }

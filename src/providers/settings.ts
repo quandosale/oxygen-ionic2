@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Storage } from '@ionic/storage';
+import { NavController, ToastController } from 'ionic-angular';
 
 /**
  * A simple settings/config class for storing key/value pairs with persistence.
@@ -8,6 +9,7 @@ import { Storage } from '@ionic/storage';
 @Injectable()
 export class Settings {
   private SETTINGS_KEY: string = '_settings';
+  private AUTH_KEY: string = 'auth';
 
   settings: any;
 
@@ -69,5 +71,21 @@ export class Settings {
 
   get allSettings() {
     return this.settings;
+  }
+
+  getAuth() {
+    return this.storage.get(this.AUTH_KEY).then(res => { return JSON.parse(res) });
+  }
+
+  setAuth(username, key) {
+    let auth = {
+      user: username,
+      key: key
+    };
+    return this.storage.set(this.AUTH_KEY, JSON.stringify(auth));
+  }
+
+  clearAuth() {
+    return this.storage.remove(this.AUTH_KEY);
   }
 }

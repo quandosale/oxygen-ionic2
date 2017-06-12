@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, Config } from 'ionic-angular';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -36,33 +35,46 @@ import { TranslateService } from '@ngx-translate/core'
           {{p.title}}
         </button>
       </ion-list>
+      <button menuClose ion-item (click)="logout()">
+        Logout
+      </button>
     </ion-content>
 
   </ion-menu>
   <ion-nav #content [root]="rootPage"></ion-nav>`
 })
 export class MyApp {
-  rootPage = FirstRunPage;
+  rootPage: Component;
 
   @ViewChild(Nav) nav: Nav;
 
   pages: any[] = [
-    { title: 'Tutorial', component: TutorialPage },
-    { title: 'Welcome', component: WelcomePage },
-    { title: 'Tabs', component: TabsPage },
-    { title: 'Cards', component: CardsPage },
-    { title: 'Content', component: ContentPage },
-    { title: 'Login', component: LoginPage },
-    { title: 'Signup', component: SignupPage },
-    { title: 'Map', component: MapPage },
-    { title: 'Master Detail', component: ListMasterPage },
-    { title: 'Menu', component: MenuPage },
-    { title: 'Settings', component: SettingsPage },
-    { title: 'Search', component: SearchPage }
+    // { title: 'Tutorial', component: TutorialPage },
+    // { title: 'Welcome', component: WelcomePage },
+    // { title: 'Tabs', component: TabsPage },
+    // { title: 'Cards', component: CardsPage },
+    // { title: 'Content', component: ContentPage },
+    // { title: 'Login', component: LoginPage },
+    // { title: 'Signup', component: SignupPage },
+    // { title: 'Map', component: MapPage },
+    // { title: 'Master Detail', component: ListMasterPage },
+    // { title: 'Menu', component: MenuPage },
+    // { title: 'Settings', component: SettingsPage },
+    // { title: 'Search', component: SearchPage }
   ]
 
-  constructor(private translate: TranslateService, private platform: Platform, settings: Settings, private config: Config, private statusBar: StatusBar, private splashScreen: SplashScreen) {
+  constructor(private translate: TranslateService, private platform: Platform, private settings: Settings, private config: Config, private statusBar: StatusBar, private splashScreen: SplashScreen) {
     this.initTranslate();
+  }
+
+  ngOnInit() {
+    let self = this;
+    this.settings.getAuth().then(auth => {
+      if (auth)
+        self.rootPage = ListMasterPage;
+      else
+        self.rootPage = FirstRunPage;
+    })
   }
 
   ionViewDidLoad() {
@@ -93,5 +105,12 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
+  }
+
+  logout() {
+    let self = this;
+    this.settings.clearAuth().then(res => {
+      this.nav.setRoot(LoginPage);
+    })
   }
 }

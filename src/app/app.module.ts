@@ -23,22 +23,22 @@ import { TutorialPage } from '../pages/tutorial/tutorial';
 import { WelcomePage } from '../pages/welcome/welcome';
 import { ActionPage } from '../pages/action/action';
 import { TabsWrapperPage } from '../pages/tabs-wrapper/tabs-wrapper';
-
+import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
 import { Api } from '../providers/api';
 import { Items } from '../providers/items';
 import { Settings } from '../providers/settings';
 import { User } from '../providers/user';
 import { Timer } from '../providers/timer';
-
+import { ImagePicker } from '@ionic-native/image-picker';
 import { Camera } from '@ionic-native/camera';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { BackgroundMode } from '@ionic-native/background-mode';
-
+import { File } from '@ionic-native/file';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
+import { LazyLoadImageModule } from 'ng2-lazyload-image';
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function HttpLoaderFactory(http: Http) {
@@ -100,9 +100,12 @@ export function providers() {
     Api,
     Items,
     User,
+    File,
     Camera,
+    ImagePicker,
     GoogleMaps,
     SplashScreen,
+    Transfer,
     Timer,
     StatusBar,
     BackgroundMode,
@@ -118,6 +121,7 @@ export function providers() {
   imports: [
     BrowserModule,
     HttpModule,
+    LazyLoadImageModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

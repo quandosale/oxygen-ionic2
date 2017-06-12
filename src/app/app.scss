@@ -199,8 +199,9 @@ form.create-form {
 }
 
 .photo-list {
-  column-width: 50vw;
+  // column-width: 45vw;
   column-gap: 0em;
+  column-count: 2;
   .photo-item {
     display: inline-block;
     width: 100%;
@@ -208,8 +209,7 @@ form.create-form {
   }
 }
 
-
-.photo-item {
+.masonry-item {
   position: relative;
   img {
     width: 100%;
@@ -221,3 +221,7 @@ form.create-form {
   }
   padding: 0 2px;
 }
+
+.masonry{-webkit-column-gap:2px;-moz-column-gap:2px;column-gap:2px;padding:2px;-webkit-columns:2;-moz-columns:2;columns:2;-webkit-transform:translateZ(0);transform:translateZ(0);box-sizing:border-box}@media (min-width: 511px){.masonry{-webkit-columns:3;-moz-columns:3;columns:3}}@media (min-width: 769px){.masonry{-webkit-columns:4;-moz-columns:4;columns:4}}@media (min-width: 1440px){.masonry{-webkit-columns:6;-moz-columns:6;columns:6}}.masonry .masonry-item{width:100%;display:block;border-bottom:2px solid transparent}
+
+/*# sourceMappingURL=masonry.css.map */
