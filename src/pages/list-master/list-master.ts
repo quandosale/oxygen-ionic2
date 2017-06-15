@@ -1,3 +1,4 @@
+import { Sync } from '../../providers/sync';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Loading, ModalController, NavController } from 'ionic-angular';
 import { AlertController, ToastController } from 'ionic-angular';
@@ -20,7 +21,7 @@ export class ListMasterPage implements OnInit {
   currentItems: Item[];
   loader: Loading;
 
-  constructor(public loadingCtrl: LoadingController, public plt: Platform, public navCtrl: NavController, public items: Items, public modalCtrl: ModalController, public alertCtrl: AlertController, private backgroundMode: BackgroundMode, private toastCtrl: ToastController) {
+  constructor(public sync: Sync, public loadingCtrl: LoadingController, public plt: Platform, public navCtrl: NavController, public items: Items, public modalCtrl: ModalController, public alertCtrl: AlertController, private backgroundMode: BackgroundMode, private toastCtrl: ToastController) {
 
   }
 
@@ -35,6 +36,17 @@ export class ListMasterPage implements OnInit {
       this.loader.dismiss();
     });
     this.backgroundMode.enable();
+
+    this.sync.syncListner().subscribe(res => {
+      let syncloader = this.loadingCtrl.create({
+        content: "Syncing..."
+      });
+      syncloader.present();
+      this.items.load().then(res => {
+        this.currentItems = res;
+        syncloader.dismiss();
+      });
+    })
   }
   /**
    * The view loaded, let's query our items for the list
@@ -58,8 +70,8 @@ export class ListMasterPage implements OnInit {
     // });
     let modal = this.modalCtrl.create(ItemCreatePage);
     modal.onDidDismiss(data => {
-      if (data.success)
-        this.currentItems.unshift(data.data);
+      // if (data.success)
+      //   this.currentItems.unshift(data.data);
     })
     modal.present();
   }

@@ -61,7 +61,6 @@ export class ItemDetailPage implements OnInit {
             this.loading = this.loadingCtrl.create({ content: 'Saving...' });
             this.loading.present();
             this.items.addLavo(this.item, this.startTime, this.counter).then((res) => {
-              console.log(res.data);
               this.loading.dismiss();
             });
             this._stop();

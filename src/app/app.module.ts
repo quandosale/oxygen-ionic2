@@ -1,3 +1,4 @@
+import { Sync } from '../providers/sync';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule, Http } from '@angular/http';
@@ -29,6 +30,7 @@ import { Items } from '../providers/items';
 import { Settings } from '../providers/settings';
 import { User } from '../providers/user';
 import { Timer } from '../providers/timer';
+import { NetState } from '../providers/network';
 import { ImagePicker } from '@ionic-native/image-picker';
 import { Camera } from '@ionic-native/camera';
 import { GoogleMaps } from '@ionic-native/google-maps';
@@ -39,6 +41,7 @@ import { File } from '@ionic-native/file';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LazyLoadImageModule } from 'ng2-lazyload-image';
+import { Network } from '@ionic-native/network';
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function HttpLoaderFactory(http: Http) {
@@ -100,14 +103,17 @@ export function providers() {
     Api,
     Items,
     User,
+    NetState, 
     File,
     Camera,
     ImagePicker,
+    Sync,
     GoogleMaps,
     SplashScreen,
     Transfer,
     Timer,
     StatusBar,
+    Network,
     BackgroundMode,
 
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },

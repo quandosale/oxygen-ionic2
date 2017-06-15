@@ -1,3 +1,5 @@
+import { Operation, Sync } from './sync';
+import { NetState } from './network';
 import { variable } from '@angular/compiler/src/output/output_ast';
 import { contentHeaders } from './header';
 import { Settings } from './settings';
@@ -21,9 +23,9 @@ export class Items {
   private selected: Number = 0;
 
   private ITEMS_KEY: string = 'items';
-  private items: Item[];
+  public items: Item[];
 
-  constructor(private transfer: Transfer, private file: File, public storage: Storage, public http: Http, public api: Api, public settings: Settings) {
+  constructor(private sync: Sync, private connection: NetState, private transfer: Transfer, private file: File, public storage: Storage, public http: Http, public api: Api, public settings: Settings) {
     this.items = [];
   }
 
@@ -33,102 +35,102 @@ export class Items {
   }
 
   load() {
-    return this.settings.getAuth().then(auth => {
-      console.log(auth, 'auth');
-      return this.api.get('PraticaList', auth)
-        .toPromise()
-        .then(res => {
-          console.log(res);
-          return res.json().data
-        })
-        .catch(err => [])
-    })
-    // return this.http.get('http://oxygen2.ilcarrozziere.it/Api/PraticaList?user=fabio&key=fabio').toPromise()
-    //   .then(res => {return res.json().data;});
-    // return this.storage.get(this.ITEMS_KEY).then(res => {
-    //   this.items = res;
-    //   if (res == null)
-    //     this.items = [];
-    //   console.log('load item', res);
-    //   return this.items;
-    // })
+    if (this.connection.isAvailable()) {
+      return this.settings.getAuth().then(auth => {
+        console.log(auth, 'auth');
+        return this.api.get('PraticaList', auth)
+          .toPromise()
+          .then(res => {
+            let data = res.json().data;
+            this.items = data;
+            this.storage.set(this.ITEMS_KEY, data);
+            return data;
+          })
+          .catch(err => [])
+      })
+    } else {
+      return this.storage.get(this.ITEMS_KEY).then(res => {
+        if (res == undefined || res == null)
+          return [];
+        this.items = res;
+        return res;
+      })
+    }
   }
 
   add(item: any) {
-    console.log(item);
-    return this.settings.getAuth().then(auth => {
-      item.user = auth.user;
-      item.key = auth.key;
-      return $.post("http://oxygen2.ilcarrozziere.it/Api/PraticaInsert", item)
-        .done(res => {
-          return res;
-        })
-        .fail(err => {
-          return err;
-        });
-    });
-    // return this.settings.getAuth().then(auth => {
-    //   item.user = auth.user;
-    //   item.key = auth.key;
-    //   return this.api.post('PraticaInsert', item)
-    //     .toPromise()
-    //     .then(res => {
-    //       let newItem = res.json().data;
-    //       console.log(newItem);
-    //       this.items.push(newItem);
-    //       return true;
-    //     })
-    //     .catch(err => false)
-    // });
-    // this.items.push(item);
-    // return this.storage.set(this.ITEMS_KEY, this.items);
-  }
+    if (this.connection.isAvailable()) {
+      return this.api.postInsertItem(item).then(res => {
+        if (res.success) {
+          this.items.unshift(res.data);
+        }
+        this.storage.set(this.ITEMS_KEY, this.items);
+        return res;
+      });
+    } else {
+      item.created_at = new Date().getTime();
+      let operation = new Operation();
 
-  addLavo(item: any, date: Date, secs: Number) {
-    return this.settings.getAuth().then(auth => {
-      var url = "http://oxygen2.ilcarrozziere.it/Api/LavorazioneInsert";
-      var data = {
-        user: auth.user,
-        key: auth.key,
-        IdPratica: item.ID,
-        DataInizioLavorazione: date.toISOString(),
-        TempoLavorazione: secs,
-        ID: ''
-      }
-      if (item.Lavorazione != null) {
-        url = "http://oxygen2.ilcarrozziere.it/Api/LavorazioneUpdate";
-        data.ID = item.Lavorazione.ID;
-      }
-      return $.post(url, data)
-        .done(res => {
-          return res;
-        })
-        .fail(err => {
-          console.log(err);
-          return err;
-        });
-    });
+      operation.id = item.created_at;
+      operation.name = Operation.PRACTICA;
+      operation.type = Operation.INSERT;
+      operation.body = item;
+
+      this.items.unshift(item);
+      this.storage.set(this.ITEMS_KEY, this.items);
+
+      this.sync.addOperation(operation);
+
+      return Promise.resolve({
+        success: true,
+        data: item
+      });
+    }
   }
 
   edit(item: any) {
-    console.log(item);
-    return this.settings.getAuth().then(auth => {
-      item.user = auth.user;
-      item.key = auth.key;
-      return $.post("http://oxygen2.ilcarrozziere.it/Api/PraticaUpdate", item)
-        .done(res => {
-          return res;
-        })
-        .fail(err => {
-          return err;
-        });
-    });
-    // var itemId = this.items.indexOf(item);
-    // this.items.splice(itemId, 1);
-    // this.items.splice(itemId, 0, item);
-    // return this.storage.set(this.ITEMS_KEY, this.items);
+    console.log(item, 'edit');
+
+    if (this.connection.isAvailable()) {
+      this.storage.set(this.ITEMS_KEY, this.items);
+      return this.api.postUpdateItem(item);
+    } else {
+      if (item.ID == undefined) {
+        this.sync.updateOperation(item.created_at, item);
+      } else {
+        let operation = new Operation();
+        operation.name = Operation.PRACTICA;
+        operation.type = Operation.UPDATE;
+        operation.body = item;
+
+        this.sync.addOperation(operation);
+      }
+      return Promise.resolve(true);
+    }
   }
 
+  addLavo(item: any, date: Date, secs: Number) {
+    if(this.connection.isAvailable()) {
+      return this.api.postLovo(item, date, secs).then(res => {        
+          item.Lavorazione = res.data;
+          this.storage.set(this.ITEMS_KEY, this.items);
+          return res;
+      })
+    } else {
+      if(item.ID == undefined) {
+
+      } else {
+        let operation = new Operation();
+        operation.name = Operation.LAVO;
+        operation.body = {
+          item: item,
+          date: date,
+          secs: secs
+        }
+        return this.sync.addOperation(operation);
+      }
+    }
+  }
   deletePhoto(photoes: Array<any>) {
     return this.settings.getAuth().then(auth => {
       let promises = [];
