@@ -47,6 +47,8 @@ export class Sync {
                 return false;
 
             var promises = [];
+            var promisesForNewItem = [];
+            var operationsForNewItem = [];
 
             let self = this;
             setTimeout(function () {
@@ -61,15 +63,35 @@ export class Sync {
                             promises.push(self.api.postUpdateItem(operation.body));
                         }
                     }
-                    if(operation.name == Operation.LAVO) {
+                    if (operation.name == Operation.LAVO) {
                         console.log(operation, 'Lavo operation');
-                        promises.push(self.api.postLovo(operation.item, operation.date, operation.secs));
+                        if (operation.body.item.ID != undefined)
+                            promises.push(self.api.postLovo(operation.body.item, operation.body.date, operation.body.secs));
+                        else
+                            operationsForNewItem.push(operation);
                     }
                 });
-
+                console.log(operationsForNewItem, 'operationsForNewItem');
                 Promise.all(promises).then(res => {
                     console.log(res, 'sync response for all operations');
-                    self.setSynced(true);
+                    var promisesForLavoNewItems = [];
+                    res.forEach(resObj => {
+                        var data = resObj.data;
+                        console.log(data);
+                        operationsForNewItem.forEach(op => {
+                            console.log(op);
+                            if (data.created_at == op.body.item.created_at) {
+                                op.body.item.ID = data.ID;
+                                promisesForLavoNewItems.push(self.api.postLovo(op.body.item, op.body.date, op.body.secs));
+                            }
+                        });
+                    });
+                    console.log(operationsForNewItem, 'second sync for lavo is ready');
+                    Promise.all(promisesForLavoNewItems).then(res => {
+                        self.setSynced(true);
+                    }).catch(err => {
+                        self.setSynced(true);
+                    })
                 }).catch(err => {
                     console.log(err, 'sync post error');
                     self.setSynced(true);

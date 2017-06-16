@@ -95,6 +95,7 @@ export class Items {
       this.storage.set(this.ITEMS_KEY, this.items);
       return this.api.postUpdateItem(item);
     } else {
+      this.storage.set(this.ITEMS_KEY, this.items);
       if (item.ID == undefined) {
         this.sync.updateOperation(item.created_at, item);
       } else {
@@ -110,25 +111,21 @@ export class Items {
   }
 
   addLavo(item: any, date: Date, secs: Number) {
-    if(this.connection.isAvailable()) {
-      return this.api.postLovo(item, date, secs).then(res => {        
-          item.Lavorazione = res.data;
-          this.storage.set(this.ITEMS_KEY, this.items);
-          return res;
+    if (this.connection.isAvailable()) {
+      return this.api.postLovo(item, date, secs).then(res => {
+        item.Lavorazione = res.data;
+        this.storage.set(this.ITEMS_KEY, this.items);
+        return res;
       })
     } else {
-      if(item.ID == undefined) {
-
-      } else {
-        let operation = new Operation();
-        operation.name = Operation.LAVO;
-        operation.body = {
-          item: item,
-          date: date,
-          secs: secs
-        }
-        return this.sync.addOperation(operation);
+      let operation = new Operation();
+      operation.name = Operation.LAVO;
+      operation.body = {
+        item: item,
+        date: date,
+        secs: secs
       }
+      return this.sync.addOperation(operation);
     }
   }
   deletePhoto(photoes: Array<any>) {
