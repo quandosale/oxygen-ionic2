@@ -20,6 +20,7 @@ export class Items {
   private selectedPhotoSubject = new Subject<Array<any>>();
   private selected: Number = 0;
   private actionSubject = new Subject<any>();
+  private refreshSubject = new Subject<any>();
   private action: any = null;
 
   private ITEMS_KEY: string = 'items';
@@ -252,6 +253,9 @@ export class Items {
   setAction(action) {
     this.actionSubject.next(action);
   }
+  setRefresh() {
+    this.refreshSubject.next(true);
+  }
 
   selectedPhotoListner(): Observable<Array<any>> {
     this.selectedPhotoSubject = new Subject<Array<any>>();
@@ -261,9 +265,14 @@ export class Items {
     this.actionSubject = new Subject<any>();
     return this.actionSubject.asObservable();
   }
+  refreshListner(): Observable<any> {
+    this.refreshSubject = new Subject<any>();
+    return this.refreshSubject.asObservable();
+  }
 
   unsubscribe() {
     this.selectedPhotoSubject.unsubscribe();
     this.actionSubject.unsubscribe();
+    this.refreshSubject.unsubscribe();
   }
 }

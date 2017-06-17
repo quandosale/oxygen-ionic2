@@ -9,8 +9,6 @@ import { ActionPage } from '../action/action';
 import { ItemCreatePage } from '../item-create/item-create';
 import { NetState } from '../../providers/network';
 
-declare var $: any;
-
 @Component({
   selector: 'page-tabs-wrapper',
   templateUrl: 'tabs-wrapper.html'
@@ -82,7 +80,7 @@ export class TabsWrapperPage {
 
             this.items.deletePhoto(this.selectedPhotoes).then(res => {
 
-              $('#refresh_photolist').trigger("click");
+              this.items.setRefresh();
               this.loading.dismiss();
             }).catch(err => {
               this.loading.dismiss();

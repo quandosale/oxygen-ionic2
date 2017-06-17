@@ -29,6 +29,7 @@ export class PhotoPage {
         this.items.actionListner().subscribe(res => {
             this.action = res;
         })
+        this.items.refreshListner().subscribe((res) => { console.log('refreshListner'); this.refresh() })
     }
 
     ngOnInit() {
@@ -136,7 +137,7 @@ export class PhotoPage {
     }
     refresh() {
         this.check = [];
-        console.log(this.selectedPhotoes, this.photoes);
+        console.log('refresh');
         this.selectedPhotoes.forEach(selID => {
             var i = 0;
             this.photoes.forEach(photo => {
@@ -150,5 +151,19 @@ export class PhotoPage {
         })
         this.selectedPhotoes = [];
         this.items.setSelectedPhotoes(this.selectedPhotoes);
+
+        this.items.getPhotoes(this.item.ID).then(res => {
+            this.loader.dismiss();
+            this.photoes = res.data;
+
+            console.log(res, 'getPhotoes result');
+            this.photoes.map(photo => {
+                photo.Url = photo.Url.replace(/\\/g, '/');
+                this.check.push(false);
+            })
+        }).catch(err => {
+            console.log(err);
+            this.loader.dismiss();
+        });
     }
 }
