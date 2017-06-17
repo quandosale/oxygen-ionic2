@@ -16,7 +16,7 @@ import { SignupPage } from '../pages/signup/signup';
 import { TabsPage } from '../pages/tabs/tabs';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { WelcomePage } from '../pages/welcome/welcome';
-
+import { ImgcacheService } from '../global/services';
 import { Settings } from '../providers/providers';
 
 import { TranslateService } from '@ngx-translate/core'
@@ -63,27 +63,34 @@ export class MyApp {
     // { title: 'Search', component: SearchPage }
   ]
 
-  constructor(private translate: TranslateService, private platform: Platform, private settings: Settings, private config: Config, private statusBar: StatusBar, private splashScreen: SplashScreen) {
+  constructor(public imgcacheService: ImgcacheService, private translate: TranslateService, private platform: Platform, private settings: Settings, private config: Config, private statusBar: StatusBar, private splashScreen: SplashScreen) {
     this.initTranslate();
   }
 
   ngOnInit() {
     let self = this;
-    this.settings.getAuth().then(auth => {
-      if (auth)
-        self.rootPage = ListMasterPage;
-      else
-        self.rootPage = FirstRunPage;
-    })
-  }
-
-  ionViewDidLoad() {
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
+      console.log('imgcacheService init');
+      // initialize imgCache library and set root
+      this.imgcacheService.initImgCache().then(() => {
+        console.log('imagecache loaded');
+        this.settings.getAuth().then(auth => {
+          if (auth)
+            self.rootPage = ListMasterPage;
+          else
+            self.rootPage = FirstRunPage;
+        })
+      });
     });
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad');
   }
 
   initTranslate() {

@@ -40,8 +40,13 @@ import { BackgroundMode } from '@ionic-native/background-mode';
 import { File } from '@ionic-native/file';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LazyLoadImageModule } from 'ng2-lazyload-image';
 import { Network } from '@ionic-native/network';
+
+import { LazyImgComponent } from '../global/components/';
+
+import { LazyLoadDirective } from '../global/directives/';
+
+import { ImgcacheService } from '../global/services/';
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function HttpLoaderFactory(http: Http) {
@@ -69,33 +74,54 @@ export function provideSettings(storage: Storage) {
  * We then take these pages and inject them into our NgModule so Angular
  * can find them. As you add and remove pages, make sure to keep this list up to date.
  */
-let pages = [
-  MyApp,
-  CardsPage,
-  ContentPage,
-  ItemCreatePage,
-  ItemDetailPage,
-  ListMasterPage,
-  LoginPage,
-  MapPage,
-  MenuPage,
-  SearchPage,
-  SettingsPage,
-  SignupPage,
-  TabsPage,
-  TutorialPage,
-  WelcomePage,
-  PhotoPage,
-  ActionPage,
-  TabsWrapperPage
-];
 
 export function declarations() {
-  return pages;
+  return [
+    MyApp,
+    CardsPage,
+    ContentPage,
+    ItemCreatePage,
+    ItemDetailPage,
+    ListMasterPage,
+    LoginPage,
+    MapPage,
+    MenuPage,
+    SearchPage,
+    SettingsPage,
+    SignupPage,
+    TabsPage,
+    TutorialPage,
+    WelcomePage,
+    PhotoPage,
+    ActionPage,
+    TabsWrapperPage,
+    LazyImgComponent,
+    LazyLoadDirective
+  ];
 }
 
 export function entryComponents() {
-  return pages;
+  return [
+    MyApp,
+    CardsPage,
+    ContentPage,
+    ItemCreatePage,
+    ItemDetailPage,
+    ListMasterPage,
+    LoginPage,
+    MapPage,
+    MenuPage,
+    SearchPage,
+    SettingsPage,
+    SignupPage,
+    TabsPage,
+    TutorialPage,
+    WelcomePage,
+    PhotoPage,
+    ActionPage,
+    TabsWrapperPage,
+    LazyImgComponent
+  ];
 }
 
 export function providers() {
@@ -103,7 +129,7 @@ export function providers() {
     Api,
     Items,
     User,
-    NetState, 
+    NetState,
     File,
     Camera,
     ImagePicker,
@@ -111,6 +137,7 @@ export function providers() {
     GoogleMaps,
     SplashScreen,
     Transfer,
+    ImgcacheService,
     Timer,
     StatusBar,
     Network,
@@ -127,7 +154,6 @@ export function providers() {
   imports: [
     BrowserModule,
     HttpModule,
-    LazyLoadImageModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

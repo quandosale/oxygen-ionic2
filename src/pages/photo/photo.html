@@ -19,9 +19,9 @@
   <input type="file" id="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)"
   />
   <div class="masonry" *ngIf="photoes">
-    <div class="masonry-item" *ngFor="let photo of photoes; let i = index;"  (click)="selectPhoto(photo, i)" >
+    <div class="masonry-item" *ngFor="let photo of photoes; let i = index;" (click)="selectPhoto(photo, i)">
       <ion-checkbox [(ngModel)]="check[i]"></ion-checkbox>
-      <img src="assets/img/loading.gif" [lazyLoad]="server_url + photo.Url"/>
+      <lazy-img [inputSrc]="server_url + photo.Url"></lazy-img>
     </div>
   </div>
 
