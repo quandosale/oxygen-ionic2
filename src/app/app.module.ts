@@ -41,12 +41,11 @@ import { File } from '@ionic-native/file';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { Network } from '@ionic-native/network';
-
 import { LazyImgComponent } from '../global/components/';
-
 import { LazyLoadDirective } from '../global/directives/';
-
+import { IonicImageViewerModule } from 'ionic-img-viewer';
 import { ImgcacheService } from '../global/services/';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function HttpLoaderFactory(http: Http) {
@@ -142,6 +141,7 @@ export function providers() {
     StatusBar,
     Network,
     BackgroundMode,
+    PhotoViewer,
 
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
@@ -154,6 +154,7 @@ export function providers() {
   imports: [
     BrowserModule,
     HttpModule,
+    IonicImageViewerModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

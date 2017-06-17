@@ -5,7 +5,7 @@ import { LoadingController, Loading, } from 'ionic-angular';
 import { ImagePicker } from '@ionic-native/image-picker';
 import { ListMasterPage } from '../list-master/list-master';
 import { Items } from '../../providers/providers';
-
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 declare var $: any;
 
 @Component({
@@ -15,6 +15,7 @@ declare var $: any;
 export class PhotoPage {
     url: any;
     @ViewChild('fileInput') fileInput;
+    action: any = null;
     selectedPhotoes: Array<any>;
     check: Array<any>;
     item: any;
@@ -22,9 +23,12 @@ export class PhotoPage {
     photoes: Array<any> = [];
     server_url: string = 'http://oxygen2.ilcarrozziere.it';
 
-    constructor(public loadingCtrl: LoadingController, private imagePicker: ImagePicker, public navCtrl: NavController, private navParams: NavParams, private items: Items, private camera: Camera) {
+    constructor(private photoViewer: PhotoViewer, public loadingCtrl: LoadingController, private imagePicker: ImagePicker, public navCtrl: NavController, private navParams: NavParams, private items: Items, private camera: Camera) {
         this.item = navParams.get('item');
         console.log(this.item);
+        this.items.actionListner().subscribe(res => {
+            this.action = res;
+        })
     }
 
     ngOnInit() {

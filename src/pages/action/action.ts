@@ -10,45 +10,41 @@ declare var $: any;
   templateUrl: 'action.html'
 })
 export class ActionPage {
-  photoes: Array<any>;
-  loading: Loading;
 
   constructor(public viewCtrl: ViewController, public items: Items, public alertCtrl: AlertController, public loadingCtrl: LoadingController, ) {
-    this.photoes = viewCtrl.getNavParams().get('photoes');
   }
 
   tag() {
-
-    this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss("tag");
   }
   delete() {
-    let confirm = this.alertCtrl.create({
-      title: 'Warning',
-      message: 'Do you want to delete fotos?',
-      buttons: [
-        {
-          text: 'No',
-          handler: () => {
-          }
-        },
-        {
-          text: 'Yes',
-          handler: () => {
-            this.loading = this.loadingCtrl.create({ content: 'Deleting...' });
-            this.loading.present();
+    // let confirm = this.alertCtrl.create({
+    //   title: 'Warning',
+    //   message: 'Do you want to delete fotos?',
+    //   buttons: [
+    //     {
+    //       text: 'No',
+    //       handler: () => {
+    //       }
+    //     },
+    //     {
+    //       text: 'Yes',
+    //       handler: () => {
+    //         this.loading = this.loadingCtrl.create({ content: 'Deleting...' });
+    //         this.loading.present();
 
-            this.items.deletePhoto(this.photoes).then(res => {
+    //         this.items.deletePhoto(this.photoes).then(res => {
 
-              $('#refresh_photolist').trigger("click");
-              this.loading.dismiss();
-            }).catch(err => {
-              this.loading.dismiss();
-            })
-          }
-        }
-      ]
-    });
-    confirm.present();
-    this.viewCtrl.dismiss();
+    //           $('#refresh_photolist').trigger("click");
+    //           this.loading.dismiss();
+    //         }).catch(err => {
+    //           this.loading.dismiss();
+    //         })
+    //       }
+    //     }
+    //   ]
+    // });
+    // confirm.present();
+    this.viewCtrl.dismiss("delete");
   }
 }

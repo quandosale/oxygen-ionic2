@@ -10,8 +10,11 @@
       </button>
     </ion-buttons>
     <ion-buttons end style="margin-top: 3px" *ngIf="tabTitle=='Foto'">
-      <button ion-button icon-only (click)="presentPopover($event)" [disabled]="selectedPhotoes.length==0">
+      <button ion-button icon-only (click)="presentPopover($event)" *ngIf="!action" [disabled]="!netstatus">
         <ion-icon name="more"></ion-icon>
+      </button>
+      <button ion-button (click)="done($event)" *ngIf="action">
+        Done
       </button>
     </ion-buttons>
   </ion-navbar>

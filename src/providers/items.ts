@@ -19,6 +19,8 @@ export class Items {
   photoes: Array<any>;
   private selectedPhotoSubject = new Subject<Array<any>>();
   private selected: Number = 0;
+  private actionSubject = new Subject<any>();
+  private action: any = null;
 
   private ITEMS_KEY: string = 'items';
   private PHOTOS_KEY: string = 'photoes';
@@ -246,13 +248,21 @@ export class Items {
   setSelectedPhotoes(photoesSelected) {
     this.selectedPhotoSubject.next(photoesSelected);
   }
+  setAction(action) {
+    this.actionSubject.next(action);
+  }
 
   selectedPhotoListner(): Observable<Array<any>> {
     this.selectedPhotoSubject = new Subject<Array<any>>();
     return this.selectedPhotoSubject.asObservable();
   }
+  actionListner(): Observable<any> {
+    this.actionSubject = new Subject<any>();
+    return this.actionSubject.asObservable();
+  }
 
   unsubscribe() {
     this.selectedPhotoSubject.unsubscribe();
+    this.actionSubject.unsubscribe();
   }
 }
