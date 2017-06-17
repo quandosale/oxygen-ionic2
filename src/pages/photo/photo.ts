@@ -13,6 +13,7 @@ declare var $: any;
     templateUrl: 'photo.html'
 })
 export class PhotoPage {
+    url: any;
     @ViewChild('fileInput') fileInput;
     selectedPhotoes: Array<any>;
     check: Array<any>;
@@ -36,11 +37,12 @@ export class PhotoPage {
         this.items.getPhotoes(this.item.ID).then(res => {
             this.loader.dismiss();
             this.photoes = res.data;
+
+            console.log(res, 'getPhotoes result');
             this.photoes.map(photo => {
                 photo.Url = photo.Url.replace(/\\/g, '/');
                 this.check.push(false);
             })
-            console.log(this.photoes);
         }).catch(err => {
             console.log(err);
             this.loader.dismiss();
@@ -87,6 +89,7 @@ export class PhotoPage {
                 console.log(res);
                 let newPhoto = res.data[0];
                 newPhoto.Url.replace(/\\/g, '/');
+                console.log(newPhoto, 'addPhoto');
                 this.photoes.push(newPhoto);
                 console.log(this.photoes);
                 this.loader.dismiss();
@@ -109,15 +112,12 @@ export class PhotoPage {
     processWebImage(event) {
         let reader = new FileReader();
         reader.onload = (readerEvent) => {
-            // let imageData = (readerEvent.target as any).result;
-            // if (this.item.photo == undefined)
-            //     this.item.photo = [];
-            // this.item.photo.push(imageData);
-            console.log(event.target.files[0]);
+            console.log(event.target.files[0], 'processWebImage');
             this.items.addPhoto(this.item, event.target.files[0]);
         };
 
         reader.readAsDataURL(event.target.files[0]);
+
     }
     selectPhoto(photo, i) {
         this.check[i] = !this.check[i];

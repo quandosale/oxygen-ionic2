@@ -75,10 +75,8 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
-      console.log('imgcacheService init');
       // initialize imgCache library and set root
       this.imgcacheService.initImgCache().then(() => {
-        console.log('imagecache loaded');
         this.settings.getAuth().then(auth => {
           if (auth)
             self.rootPage = ListMasterPage;

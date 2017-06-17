@@ -7,6 +7,8 @@ import 'rxjs/add/operator/toPromise';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 
+declare var navigator: any;
+
 @Injectable()
 export class Sync {
     SYNC_KEY: string = "Sync";
@@ -52,6 +54,8 @@ export class Sync {
 
             let self = this;
             setTimeout(function () {
+                if (!navigator.onLine)
+                    return;
                 ops.forEach(operation => {
                     if (operation.name == Operation.PRACTICA) {
                         if (operation.type == Operation.INSERT) {
@@ -70,11 +74,18 @@ export class Sync {
                         else
                             operationsForNewItem.push(operation);
                     }
+                    if (operation.name == Operation.FOTO) {
+                        console.log(operation, 'Foto operation');
+                        if (operation.body.item.ID != undefined)
+                            promises.push(self.api.postPhoto(operation.body.item, operation.body.photo));
+                        else
+                            operationsForNewItem.push(operation);
+                    }
                 });
                 console.log(operationsForNewItem, 'operationsForNewItem');
                 Promise.all(promises).then(res => {
                     console.log(res, 'sync response for all operations');
-                    var promisesForLavoNewItems = [];
+                    var promisesForNewItems = [];
                     res.forEach(resObj => {
                         var data = resObj.data;
                         console.log(data);
@@ -82,12 +93,16 @@ export class Sync {
                             console.log(op);
                             if (data.created_at == op.body.item.created_at) {
                                 op.body.item.ID = data.ID;
-                                promisesForLavoNewItems.push(self.api.postLovo(op.body.item, op.body.date, op.body.secs));
+                                if (op.name == Operation.LAVO)
+                                    promisesForNewItems.push(self.api.postLovo(op.body.item, op.body.date, op.body.secs));
+                                if (op.name == Operation.FOTO)
+                                    promisesForNewItems.push(self.api.postPhoto(op.body.item, op.body.photo));
                             }
                         });
                     });
+                    self.storage.remove(self.SYNC_KEY);
                     console.log(operationsForNewItem, 'second sync for lavo is ready');
-                    Promise.all(promisesForLavoNewItems).then(res => {
+                    Promise.all(promisesForNewItems).then(res => {
                         self.setSynced(true);
                     }).catch(err => {
                         self.setSynced(true);
@@ -97,7 +112,6 @@ export class Sync {
                     self.setSynced(true);
                 });
 
-                self.storage.remove(self.SYNC_KEY);
 
             }, 10000);
 

@@ -12,7 +12,7 @@ export class ImgcacheService {
   public imgQueue: string[] = [];
 
   constructor(platform: Platform) {
-    ImgCache.options.debug = true;
+    ImgCache.options.debug = false;
   }
 
   /**
@@ -22,10 +22,8 @@ export class ImgcacheService {
   public initImgCache(): Promise<any> {
     return new Promise((resolve, reject) => {
       if (ImgCache.ready) {
-        console.log('imagecache ready');
         resolve();
       } else {
-        console.log('imagecache ready else');
         ImgCache.init(() => resolve(), () => reject());
       }
     });
@@ -43,7 +41,6 @@ export class ImgcacheService {
         if (success) {
           ImgCache.getCachedFileURL(src,
             (originalUrl, cacheUrl) => {
-              console.log(originalUrl, cacheUrl, 'getcachedFileUrl');
               resolve(cacheUrl);
             },
             (e) => {
@@ -53,7 +50,6 @@ export class ImgcacheService {
           // cache img
           ImgCache.cacheFile(src);
           // return original img URL
-          console.log(src, 'cacheFile');
           resolve(src);
         }
       });

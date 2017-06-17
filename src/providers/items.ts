@@ -1,13 +1,11 @@
 import { Operation, Sync } from './sync';
 import { NetState } from './network';
 import { variable } from '@angular/compiler/src/output/output_ast';
-import { contentHeaders } from './header';
 import { Settings } from './settings';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Storage } from '@ionic/storage';
-import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
 import { File } from '@ionic-native/file';
 import { Api } from './api';
 import { Subject } from 'rxjs/Subject';
@@ -23,9 +21,10 @@ export class Items {
   private selected: Number = 0;
 
   private ITEMS_KEY: string = 'items';
+  private PHOTOS_KEY: string = 'photoes';
   public items: Item[];
 
-  constructor(private sync: Sync, private connection: NetState, private transfer: Transfer, private file: File, public storage: Storage, public http: Http, public api: Api, public settings: Settings) {
+  constructor(private sync: Sync, private connection: NetState, private file: File, public storage: Storage, public http: Http, public api: Api, public settings: Settings) {
     this.items = [];
   }
 
@@ -59,6 +58,7 @@ export class Items {
   }
 
   add(item: any) {
+    item.Targa = item.Targa.toUpperCase();
     if (this.connection.isAvailable()) {
       return this.api.postInsertItem(item).then(res => {
         if (res.success) {
@@ -89,7 +89,7 @@ export class Items {
   }
 
   edit(item: any) {
-    console.log(item, 'edit');
+    item.Targa = item.Targa.toUpperCase();
 
     if (this.connection.isAvailable()) {
       this.storage.set(this.ITEMS_KEY, this.items);
@@ -146,54 +146,90 @@ export class Items {
   }
 
   addPhoto(item: any, photo: any) {
-    const fileTransfer: TransferObject = this.transfer.create();
+    var practicaID = item.ID;
+    if (this.connection.isAvailable()) {
+      return this.api.postPhoto(item, photo).then(res => {
+        this.storage.get(this.PHOTOS_KEY).then(photoesData => {
+          if (photoesData == null || photoesData == undefined)
+            photoesData = {};
+          if (photoesData[practicaID] == undefined)
+            photoesData[practicaID] = [];
+          console.log(res, 'addphoto');
+          res.data.forEach(photo => {
+            photoesData[practicaID].push({
+              ID: photo.ID,
+              Url: photo.Url
+            })
+          });
 
-    return this.settings.getAuth().then(auth => {
-      item.user = auth.user;
-      item.key = auth.key;
-
-      let options: FileUploadOptions = {
-        fileKey: 'file',
-        fileName: '1.jpg',
-        headers: {},
-        params: {
-          user: auth.user,
-          key: auth.key,
-          PraticaID: item.ID
-        }
-      }
-      console.log(photo);
-      return fileTransfer.upload(photo, 'http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineAdd', options)
-        .then((data) => {
-          return JSON.parse(data.response);
-        }, (err) => {
-          console.log(err);
-          return err;
+          this.storage.set(this.PHOTOS_KEY, photoesData);
         })
-      // return $.post("http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineAdd", item)
-      //   .done(res => {
-      //     console.log(res);
-      //     return res;
-      //   })
-      //   .fail(err => {
-      //     return err;
-      //   });
-    })
+        return res;
+      });
+    } else {
+      let op = new Operation();
+      op.name = Operation.FOTO;
+      op.type = Operation.INSERT;
+      op.body = {
+        item: item,
+        photo: photo
+      };
+      this.sync.addOperation(op);
+
+      this.storage.get(this.PHOTOS_KEY).then(photoesData => {
+        if (photoesData == null || photoesData == undefined)
+          photoesData = {};
+        if (photoesData[practicaID] == undefined)
+          photoesData[practicaID] = [];
+        photoesData[practicaID].push({
+          Url: photo,
+          local: true
+        });
+
+        this.storage.set(this.PHOTOS_KEY, photoesData);
+      })
+      return Promise.resolve({
+        data: [{
+          Url: photo,
+          local: true
+        }]
+      })
+    }
   }
 
   getPhotoes(practicaID) {
-    console.log('getPhotoes err');
-    return this.settings.getAuth().then(auth => {
-      var url = `http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineList?user=${auth.user}&key=${auth.key}&PraticaID=${practicaID}`;
-      return $.post(url)
-        .done(res => {
-          return res;
-        })
-        .fail(err => {
-          console.log(err);
-          return err;
-        });
-    })
+    if (this.connection.isAvailable()) {
+      return this.settings.getAuth().then(auth => {
+        var url = `http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineList?user=${auth.user}&key=${auth.key}&PraticaID=${practicaID}`;
+        return $.post(url)
+          .done(res => {
+            this.storage.get(this.PHOTOS_KEY).then(photoesData => {
+              if (photoesData == null || photoesData == undefined)
+                photoesData = {};
+              photoesData[practicaID] = res.data.map(photo => {
+                return {
+                  ID: photo.ID,
+                  Url: photo.Url
+                }
+              });
+              this.storage.set(this.PHOTOS_KEY, photoesData);
+            })
+            return res;
+          })
+          .fail(err => {
+            console.log(err);
+            return err;
+          });
+      })
+    } else {
+      return this.storage.get(this.PHOTOS_KEY).then(photoesData => {
+        if (photoesData == undefined || photoesData == null)
+          return { data: [] };
+        let result;
+        result = photoesData[practicaID] ? photoesData[practicaID] : [];
+        return { data: result };
+      })
+    }
   }
 
   delete(item: Item) {

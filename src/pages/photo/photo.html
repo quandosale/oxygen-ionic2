@@ -21,7 +21,8 @@
   <div class="masonry" *ngIf="photoes">
     <div class="masonry-item" *ngFor="let photo of photoes; let i = index;" (click)="selectPhoto(photo, i)">
       <ion-checkbox [(ngModel)]="check[i]"></ion-checkbox>
-      <lazy-img [inputSrc]="server_url + photo.Url"></lazy-img>
+      <lazy-img [inputSrc]="server_url + photo.Url" *ngIf="!photo.local"></lazy-img>
+      <img [src]="photo.Url" style="display:block" *ngIf="photo.local">
     </div>
   </div>
 

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Settings } from './settings';
+import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
+
 declare var $: any;
 /**
  * Api is a generic REST Api handler. Set your API url first.
@@ -10,7 +12,7 @@ declare var $: any;
 export class Api {
   url: string = 'http://oxygen2.ilcarrozziere.it/Api';
 
-  constructor(public http: Http, public settings: Settings) {
+  constructor(public http: Http, public settings: Settings, private transfer: Transfer) {
   }
 
   get(endpoint: string, params?: any, options?: RequestOptions) {
@@ -77,7 +79,7 @@ export class Api {
     });
   }
 
-  postLovo(item:any , date: Date, secs: Number) {
+  postLovo(item: any, date: Date, secs: Number) {
     console.log(item.ID, 'postLovo')
     return this.settings.getAuth().then(auth => {
       var url = "http://oxygen2.ilcarrozziere.it/Api/LavorazioneInsert";
@@ -102,5 +104,32 @@ export class Api {
           return err;
         });
     });
+  }
+  postPhoto(item, photo) {
+    const fileTransfer: TransferObject = this.transfer.create();
+
+    return this.settings.getAuth().then(auth => {
+      item.user = auth.user;
+      item.key = auth.key;
+
+      let options: FileUploadOptions = {
+        fileKey: 'file',
+        fileName: '1.jpg',
+        headers: {},
+        params: {
+          user: auth.user,
+          key: auth.key,
+          PraticaID: item.ID
+        }
+      }
+      console.log(photo);
+      return fileTransfer.upload(photo, 'http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineAdd', options)
+        .then((data) => {
+          return JSON.parse(data.response);
+        }, (err) => {
+          console.log(err);
+          return err;
+        })
+    })
   }
 }
