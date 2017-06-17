@@ -38,7 +38,9 @@ export class PhotoPage {
             content: "Loading..."
         });
         this.loader.present();
-        this.items.getPhotoes(this.item.ID).then(res => {
+        let id = this.item.ID;
+        if (id == undefined) id = this.item.created_at;
+        this.items.getPhotoes(id).then(res => {
             this.loader.dismiss();
             this.photoes = res.data;
 

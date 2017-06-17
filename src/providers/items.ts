@@ -178,6 +178,7 @@ export class Items {
       };
       this.sync.addOperation(op);
 
+      if (practicaID == undefined) practicaID = item.created_at;
       this.storage.get(this.PHOTOS_KEY).then(photoesData => {
         if (photoesData == null || photoesData == undefined)
           photoesData = {};
