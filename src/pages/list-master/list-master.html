@@ -14,8 +14,8 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item-sliding *ngFor="let item of currentItems">
+  <ion-list [virtualScroll]="currentItems">
+    <ion-item-sliding *virtualItem="let item">
       <button ion-item (click)="openItem(item)">
         <ion-avatar item-start class="item-avatar android" showWhen="android">
           01
