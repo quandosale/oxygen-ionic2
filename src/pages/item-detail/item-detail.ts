@@ -12,7 +12,7 @@ import { Items, Timer } from '../../providers/providers';
 })
 export class ItemDetailPage implements OnInit {
   item: any;
-  mode: Boolean = false;
+  mode: string = 'notStarted';
   counterSubscription: any;
   loading: Loading;
 
@@ -37,11 +37,11 @@ export class ItemDetailPage implements OnInit {
     }
     this.startTime = new Date();
     this.timer.start();
-    this.mode = true;
+    this.mode = 'started';
   }
   pause() {
     this.timer.pause();
-    this.mode = false;
+    this.mode = 'paused';
   }
   stop() {
     this.timer.pause();
@@ -52,7 +52,7 @@ export class ItemDetailPage implements OnInit {
         {
           text: 'No',
           handler: () => {
-            this._stop();
+            this.pause();
           }
         },
         {
@@ -72,7 +72,7 @@ export class ItemDetailPage implements OnInit {
   }
   _stop() {
     this.timer.stop();
-    this.mode = false;
+    this.mode = 'notStarted';
   }
 
   ngOnDestroy() {

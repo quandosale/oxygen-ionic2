@@ -13,7 +13,7 @@
       <button ion-button icon-only (click)="presentPopover($event)" *ngIf="!action" [disabled]="!netstatus">
         <ion-icon name="more"></ion-icon>
       </button>
-      <button ion-button (click)="done($event)" *ngIf="action">
+      <button ion-button (click)="done($event)" *ngIf="action" [disabled]="selectedPhotoes.length==0">
         Done
       </button>
     </ion-buttons>

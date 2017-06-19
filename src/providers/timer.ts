@@ -33,7 +33,7 @@ export class Timer {
         this.timer = setInterval(function () {
             self.incCounter();
             self.counterSubject.next(self.getCounter());
-        }, 100);
+        }, 1000);
     }
 
     pause() {

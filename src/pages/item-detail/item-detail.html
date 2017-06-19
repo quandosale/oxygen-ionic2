@@ -11,13 +11,14 @@
     </div>
     <div class="timer-control">
       <ion-grid>
-        <ion-row class="play" *ngIf="!mode">
+        <ion-row class="play" *ngIf="mode=='notStarted' || mode=='paused'">
           <ion-col col-12 (click)="play()">
-            <img src="assets/img/play_btn.png" alt="">
-            <h3>INIZIA LAVORO</h3>
+            <img src="assets/img/play_btn.png" alt="" *ngIf="mode=='notStarted'">
+            <img src="assets/img/resume_btn.png" alt="" *ngIf="mode=='paused'">
+            <h3>{{mode=='notStarted'?'INIZIA LAVORO':'Riprendi Lavoro'}}</h3>
           </ion-col>
         </ion-row>
-        <ion-row class="pause-stop" *ngIf="mode">
+        <ion-row class="pause-stop" *ngIf="mode=='started'">
           <ion-col col-6 (click)="pause()">
             <img src="assets/img/pause_btn.png" alt="">
             <h3>PAUSA</h3>

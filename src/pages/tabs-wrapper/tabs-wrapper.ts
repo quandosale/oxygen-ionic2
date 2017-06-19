@@ -60,9 +60,10 @@ export class TabsWrapperPage {
     })
   }
   done() {
+    let message = `Do you want to ${this.action} fotos?`;
     let confirm = this.alertCtrl.create({
-      title: 'Warning',
-      message: 'Do you want to delete fotos?',
+      title: 'Confirm',
+      message: message,
       buttons: [
         {
           text: 'No',
