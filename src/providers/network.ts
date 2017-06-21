@@ -13,6 +13,7 @@ declare var Connection: any;
 export class NetState {
 
     _isConnected: Boolean = true;
+    duplicateSync: Boolean = false;
 
     constructor(private sync: Sync, private network: Network, private platform: Platform) {
         console.log('connection');
@@ -23,7 +24,13 @@ export class NetState {
         let connectSubscription = this.network.onConnect().subscribe(() => {
             this._isConnected = true;
             console.log('network connected!', this.network.type);
-            
+
+            if(this.duplicateSync) return;
+            this.duplicateSync = true;
+            let self = this;
+            setTimeout(function() {
+                self.duplicateSync = false;
+            }, 10000);
             this.sync.syncOperation().then(res => {
                 console.log('sync result', res);
             })
