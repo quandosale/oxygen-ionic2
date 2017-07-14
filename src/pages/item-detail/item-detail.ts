@@ -20,8 +20,17 @@ export class ItemDetailPage implements OnInit {
   counterText: String = '00:00:00';
   startTime: Date;
 
+  isTempoAvailable: Boolean = false;
+  practicaTypeList = ['', 'Aperta', 'Prenotata', 'In lavorazione', 'Ultimata', 'Consegnata'];
+  practicaType: String;
+
   constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, navParams: NavParams, public items: Items, public timer: Timer, public alertCtrl: AlertController) {
     this.item = navParams.get('item');
+    if (this.item.Lavorazione)
+      if (this.item.Lavorazione.StatoID == 3) this.isTempoAvailable = true;
+      else this.practicaType = this.practicaTypeList[this.item.Lavorazione.StatoID];
+    else
+      this.practicaType = this.practicaTypeList[1];
   }
 
   ngOnInit() {

@@ -1,12 +1,23 @@
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar *ngIf="!isSearching">
     <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
-    <ion-title>In Lavorazione</ion-title>
+    <ion-title>{{practicaType[statoID]}}</ion-title>
 
     <ion-buttons end>
+      <button ion-button icon-only (click)="searchToggle(true)">
+        <ion-icon name="search"></ion-icon>
+      </button>
       <button ion-button icon-only (click)="addItem()">
         <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>  
+  <ion-navbar *ngIf="isSearching">
+    <input type="text" placeholder="Cerca Practica" id="searchbox" (ngModelChange)="filterChange($event)" style="padding: 5px" [(ngModel)]="filterString"> 
+    <ion-buttons end>
+      <button ion-button icon-only (click)="searchToggle(false)" style="margin-left: 2em">
+        Annulla
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -14,13 +25,13 @@
 </ion-header>
 
 <ion-content>
-  <ion-list [virtualScroll]="currentItems" bufferRatio="10">
+  <ion-list [virtualScroll]="itemsFiltered" [hidden]="itemsFiltered.length == 0">
     <ion-item-sliding *virtualItem="let item">
       <button ion-item (click)="openItem(item)">
-        <ion-avatar item-start class="item-avatar android" showWhen="android">
+        <ion-avatar item-start class="item-avatar android" showWhen="android" *ngIf="statoID==3">
           01
         </ion-avatar>
-        <ion-avatar item-start class="item-avatar ios" showWhen="ios">
+        <ion-avatar item-start class="item-avatar ios" showWhen="ios" *ngIf="statoID==3">
           01
         </ion-avatar>
         <h2 style="color: #188b37; font-size: 1.9rem;">{{item.Targa}}</h2>

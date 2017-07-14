@@ -2,14 +2,15 @@
 
   <div class="tempo">
     <div class="profile">
-      <ion-avatar item-start class="item-avatar android">
+      <ion-avatar item-start class="item-avatar android" *ngIf="isTempoAvailable">
         01
       </ion-avatar>
+      <div class="space" *ngIf="!isTempoAvailable"></div>
       <h1>{{item.Targa}}</h1>
       <h3>{{item.Marca}}</h3>
       <h3 style="color: #383a39; margin-top: 1.1rem;">{{item.Modello}}</h3>
     </div>
-    <div class="timer-control">
+    <div class="timer-control" *ngIf="isTempoAvailable">
       <ion-grid>
         <ion-row class="play" *ngIf="mode=='notStarted' || mode=='paused'">
           <ion-col col-12 (click)="play()">
@@ -30,8 +31,12 @@
         </ion-row>
       </ion-grid>
     </div>
-    <div class="timer">
+    <div class="timer" *ngIf="isTempoAvailable">
       Tempo <span class="counter">{{counterText}}</span>
+    </div>
+    <div class="practica-type" *ngIf="!isTempoAvailable">
+      <h2 style="font-size: 2.45rem; font-weight: 600;margin-bottom: 0.5rem;margin-top:0">{{practicaType}}</h2>
+      <h2 style="font-size: 2.15rem; font-weight: 500;margin:0">IL {{item.DataInserimento | date:'MM/dd/y'}}</h2>
     </div>
   </div>
 

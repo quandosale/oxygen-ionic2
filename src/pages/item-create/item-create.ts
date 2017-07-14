@@ -101,6 +101,7 @@ export class ItemCreatePage {
       this.items.add(this.item)
         .then(res => {
           this.loader.dismiss();
+          console.log(res, 'added');
           this.viewCtrl.dismiss(res);
         });
     } else {

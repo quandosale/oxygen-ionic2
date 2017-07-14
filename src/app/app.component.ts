@@ -22,26 +22,7 @@ import { Settings } from '../providers/providers';
 import { TranslateService } from '@ngx-translate/core'
 
 @Component({
-  template: `<ion-menu [content]="content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Pages</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-      <ion-list>
-        <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-          {{p.title}}
-        </button>
-      </ion-list>
-      <button menuClose ion-item (click)="logout()">
-        Logout
-      </button>
-    </ion-content>
-
-  </ion-menu>
-  <ion-nav #content [root]="rootPage"></ion-nav>`
+  templateUrl: 'app.component.html'
 })
 export class MyApp {
   rootPage: Component;
@@ -117,5 +98,10 @@ export class MyApp {
     this.settings.clearAuth().then(res => {
       this.nav.setRoot(LoginPage);
     })
+  }
+  gotoPracticaList(ID: number) {
+    this.nav.setRoot(ListMasterPage, {
+      statoID: ID
+    });
   }
 }

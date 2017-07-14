@@ -25,7 +25,7 @@ export class Items {
 
   private ITEMS_KEY: string = 'items';
   private PHOTOS_KEY: string = 'photoes';
-  public items: Item[];
+  public items: Array<Item[]> = [[], [], [], [], [], []];
 
   constructor(private sync: Sync, private connection: NetState, private file: File, public storage: Storage, public http: Http, public api: Api, public settings: Settings) {
     this.items = [];
@@ -36,26 +36,28 @@ export class Items {
       .map(resp => resp.json());
   }
 
-  load() {
+  load(statoID: number) {
     if (this.connection.isAvailable()) {
       return this.settings.getAuth().then(auth => {
         console.log(auth, 'auth');
+        auth.statoID = statoID;
         return this.api.get('PraticaList', auth)
           .toPromise()
           .then(res => {
             let data = res.json().data;
-            this.items = data;
-            this.storage.set(this.ITEMS_KEY, data);
+            this.items[statoID]= data;
+            this.storage.set(this.ITEMS_KEY, this.items);
             return data;
           })
           .catch(err => [])
       })
     } else {
       return this.storage.get(this.ITEMS_KEY).then(res => {
+        console.log(res, 'offline');
         if (res == undefined || res == null)
           return [];
-        this.items = res;
-        return res;
+        this.items = res[statoID];
+        return this.items;
       })
     }
   }
@@ -236,11 +238,11 @@ export class Items {
     }
   }
 
-  delete(item: Item) {
-    var itemId = this.items.indexOf(item);
-    this.items.splice(itemId, 1);
-    return this.storage.set(this.ITEMS_KEY, this.items);
-  }
+  // delete(item: Item) {
+  //   var itemId = this.items.indexOf(item);
+  //   this.items.splice(itemId, 1);
+  //   return this.storage.set(this.ITEMS_KEY, this.items);
+  // }
 
   deleteAll() {
     this.items = [];
