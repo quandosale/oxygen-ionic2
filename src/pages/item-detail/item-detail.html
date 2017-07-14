@@ -32,7 +32,7 @@
       </ion-grid>
     </div>
     <div class="timer" *ngIf="isTempoAvailable">
-      Tempo <span class="counter">{{counterText}}</span>
+      Tempo <span class="counter">{{formatCounter(counter)}}</span>
     </div>
     <div class="practica-type" *ngIf="!isTempoAvailable">
       <h2 style="font-size: 2.45rem; font-weight: 600;margin-bottom: 0.5rem;margin-top:0">{{practicaType}}</h2>

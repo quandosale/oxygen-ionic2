@@ -3,4 +3,19 @@ page-list-master {
     width: calc(100% - 14px);
     margin-left: 14px;
   }
+
+  .timer-badge {
+    border: solid 1px black;
+    color: black;
+    font-size: 0.93em;
+    font-weight: 500;
+    padding: 2px 8px;
+  }
+
+  ion-list .item-inner {
+    border: none !important;
+  }
+  ion-item-sliding button.item {
+    border-bottom: 0.55px solid #c8c7cc !important;
+  }
 }

@@ -3,7 +3,7 @@ import { User } from './user';
 import { Api } from './api';
 import { Settings } from './settings';
 import { Items } from './items';
-import { Timer } from './timer';
+import { Timer, TimerManager } from './timer';
 import { NetState } from './network';
 
 export {
@@ -12,6 +12,7 @@ Api,
 Settings,
 Items,
 Timer,
+TimerManager,
 NetState,
 Sync,
 Operation,

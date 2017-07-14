@@ -27,7 +27,7 @@
 <ion-content>
   <ion-list [virtualScroll]="itemsFiltered" [hidden]="itemsFiltered.length == 0">
     <ion-item-sliding *virtualItem="let item">
-      <button ion-item (click)="openItem(item)">
+      <button ion-item (click)="openItem(item)"  [ngStyle]="{'background': getBackgroundColor(item)}">
         <ion-avatar item-start class="item-avatar android" showWhen="android" *ngIf="statoID==3">
           01
         </ion-avatar>
@@ -36,7 +36,11 @@
         </ion-avatar>
         <h2 style="color: #188b37; font-size: 1.9rem;">{{item.Targa}}</h2>
         <p style="color: black">{{item.Marca}}</p>
-        <ion-note item-end *ngIf="item.note">{{item.Modello}}</ion-note>
+        <ion-icon item-end name="play" *ngIf="getCounter(item) && isPlaying(item)"></ion-icon>
+        <ion-icon item-end name="pause" *ngIf="getCounter(item) && !isPlaying(item)"></ion-icon>
+        <ion-note item-end class="timer-badge" *ngIf="getCounter(item)">
+          {{getCounter(item)}}
+        </ion-note>
       </button>
 
       <!--<ion-item-options>

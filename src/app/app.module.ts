@@ -29,7 +29,7 @@ import { Api } from '../providers/api';
 import { Items } from '../providers/items';
 import { Settings } from '../providers/settings';
 import { User } from '../providers/user';
-import { Timer } from '../providers/timer';
+import { Timer, TimerManager } from '../providers/timer';
 import { NetState } from '../providers/network';
 import { ImagePicker } from '@ionic-native/image-picker';
 import { Camera } from '@ionic-native/camera';
@@ -137,7 +137,7 @@ export function providers() {
     SplashScreen,
     Transfer,
     ImgcacheService,
-    Timer,
+    TimerManager,
     StatusBar,
     Network,
     BackgroundMode,

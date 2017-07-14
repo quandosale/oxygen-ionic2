@@ -8,11 +8,12 @@ import { Platform } from 'ionic-angular';
 
 import { ItemCreatePage } from '../item-create/item-create';
 import { TabsWrapperPage } from '../tabs-wrapper/tabs-wrapper';
-
-import { Items } from '../../providers/providers';
 import { Item } from '../../models/item';
+import { Items } from '../../providers/providers';
+import { TimerManager, Timer } from '../../providers/timer';
 
-declare var $:any;
+
+declare var $: any;
 
 @Component({
   selector: 'page-list-master',
@@ -22,24 +23,36 @@ export class ListMasterPage implements OnInit {
   currentItems: Item[];
   itemsFiltered: Item[] = [];
   loader: Loading;
-  statoID: number = 1;
+  statoID: number = 3;
   isSearching: Boolean = false;
   filterString: string = "";
+  timerList: any;
+  counterList: any = {};
 
   practicaType = ['', 'Aperta', 'Prenotata', 'In lavorazione', 'Ultimata', 'Consegnata'];
 
-  constructor(public navParams: NavParams, 
-    public sync: Sync, 
-    public loadingCtrl: LoadingController, 
-    public plt: Platform, 
-    public navCtrl: NavController, 
-    public items: Items, 
-    public modalCtrl: ModalController, 
-    public alertCtrl: AlertController, 
-    private backgroundMode: BackgroundMode, 
+  constructor(public navParams: NavParams,
+    public sync: Sync,
+    public loadingCtrl: LoadingController,
+    public plt: Platform,
+    public navCtrl: NavController,
+    public items: Items,
+    public modalCtrl: ModalController,
+    public alertCtrl: AlertController,
+    private backgroundMode: BackgroundMode,
+    private timerManager: TimerManager,
     private toastCtrl: ToastController) {
 
     if (this.navParams.get('statoID')) this.statoID = this.navParams.get('statoID')
+
+    setInterval(() => {
+      for (var lavoID in this.counterList) {
+        if (this.counterList.hasOwnProperty(lavoID) && this.timerList[lavoID]) {
+          if(this.timerList[lavoID].state == Timer.PLAYING)
+            this.counterList[lavoID] += 1000;
+        }
+      }
+    }, 1000);
   }
 
   ngOnInit() {
@@ -70,11 +83,19 @@ export class ListMasterPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.counterList = {};
     localStorage.setItem('exitOnceAgain', '0');
-    console.log('list-master', 'ionViewWillEnter');
     this.plt.registerBackButtonAction(() => {
       this.onBack();
     });
+
+    this.timerList = this.timerManager.getTimerList();
+    for (var lavoID in this.timerList) {
+      if (this.timerList.hasOwnProperty(lavoID)) {
+        var element = this.timerList[lavoID];
+        this.counterList[lavoID] = this.timerManager.getTotalTime(Number.parseInt(lavoID));
+      }
+    }
   }
   /**
    * Prompt the user to add a new item. This shows our ItemCreatePage in a
@@ -125,7 +146,6 @@ export class ListMasterPage implements OnInit {
   // }
 
   onBack() {
-    console.log('onback', 'list-master');
     this.presentToast();
     if (localStorage.getItem('exitOnceAgain') == '1') {
       this.plt.exitApp();
@@ -145,22 +165,22 @@ export class ListMasterPage implements OnInit {
   }
 
   searchToggle(arg: Boolean) {
-    if(!arg) {
+    if (!arg) {
       this.filterString = "";
       this.itemsFiltered = this.currentItems.slice()
     }
     this.isSearching = !this.isSearching;
-    if(this.isSearching) {
+    if (this.isSearching) {
       $('#searchbox').focus();
     }
   }
 
   getFilteredItems(filter) {
     this.itemsFiltered = [];
-    
+
     this.itemsFiltered = this.currentItems.filter(item => {
       const targa = item.Targa.toLowerCase();
-      if(targa.indexOf(filter.toLowerCase()) == -1)
+      if (targa.indexOf(filter.toLowerCase()) == -1)
         return false;
       return true;
     })
@@ -170,7 +190,34 @@ export class ListMasterPage implements OnInit {
     if (e != '') {
       this.getFilteredItems(e);
     }
-    if(e == '')
+    if (e == '')
       this.itemsFiltered = this.currentItems.slice()
+  }
+
+  getCounter(item: Item) {
+    const lavoID = item.Lavorazione.ID;
+    if(!this.counterList[lavoID])
+      return null;
+    return this.formatCounter(this.counterList[lavoID]);
+  }
+
+  formatCounter(counter) {
+    var date = new Date(1970, 0, 1);
+    date.setSeconds(Math.round(counter / 1000));
+    return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+  }
+
+  isPlaying(item) {
+    const lavoID = item.Lavorazione.ID;
+    if(this.timerList[lavoID].state == Timer.PLAYING)
+      return true;
+    return false;
+  }
+
+  getBackgroundColor(item: Item) {
+    const lavoID = item.Lavorazione.ID;
+    if(this.getCounter(item))
+      return '#d1f1da';
+    return 'white';
   }
 }

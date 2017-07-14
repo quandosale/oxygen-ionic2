@@ -7,57 +7,82 @@ import 'rxjs/add/operator/toPromise';
 
 
 @Injectable()
-export class Timer {
-
-    private counterSubject = new Subject<Number>();
-    private timer;
+export class TimerManager {
+    timerList: any;
 
     constructor() {
+        this.timerList = {};
     }
 
-    timerListner(): Observable<Number> {
-        this.resetCounter();
-        this.counterSubject = new Subject<Number>();
-        return this.counterSubject.asObservable();
+    newTimer(lavoID: number) {
+        var timer = new Timer(lavoID);
+        this.timerList[lavoID] = timer;
     }
 
-    unsubscribe() {
-        clearInterval(this.timer);
-        console.log('unsubscribe');
-        this.counterSubject.unsubscribe();
+    getTimerByLavoID(lavoID: number): Timer {
+        return this.timerList[lavoID];
     }
 
-    start() {
-        localStorage.setItem('timer_working', '1');
-        let self = this;
-        this.timer = setInterval(function () {
-            self.incCounter();
-            self.counterSubject.next(self.getCounter());
-        }, 1000);
+    getTimerList(): any {
+        return this.timerList;
     }
 
-    pause() {
-        clearInterval(this.timer);
+    remove(lavoID: number) {
+        delete this.timerList[lavoID];
     }
 
-    stop() {
-        localStorage.setItem('timer_working', '0');
-        clearInterval(this.timer);
-        this.resetCounter();
-        this.counterSubject.next(this.getCounter());
+    removeAll() {
+        this.timerList = {};
     }
 
-    resetCounter() {
-        localStorage.setItem('counter', '0');
+    pause(lavoID: number) {
+        this.timerList[lavoID].state = Timer.PASUED;
+        var timeToInc = new Date().getTime() - this.timerList[lavoID].startTime.getTime();
+        this.timerList[lavoID].totalTime += timeToInc;
     }
 
-    incCounter() {
-        let counter = localStorage.getItem('counter');
-        let newVal = +counter + 1;
-        localStorage.setItem('counter', '' + newVal);
+    play(lavoID: number) {
+        if(!this.timerList[lavoID]) 
+            this.timerList[lavoID] = new Timer(lavoID);
+
+        this.timerList[lavoID].state = Timer.PLAYING;
+        this.timerList[lavoID].startTime = new Date();
     }
 
-    getCounter() {
-        return +localStorage.getItem('counter');
+    getTotalTime(lavoID: number): number {
+        if(!this.timerList[lavoID])
+            return 0;
+        if(this.timerList[lavoID].state == Timer.PASUED)
+            return this.timerList[lavoID].totalTime;
+        var timeToInc = new Date().getTime() - this.timerList[lavoID].startTime.getTime();
+        return timeToInc + this.timerList[lavoID].totalTime;
     }
+
+    // Returns the total elapsed time
+    stop(lavoID: number): number {
+        var res;
+        var timeToInc = new Date().getTime() - this.timerList[lavoID].startTime.getTime();
+        res = this.timerList[lavoID].totalTime + timeToInc;
+        
+        delete this.timerList[lavoID];
+        return res;
+    }
+}
+
+export class Timer {
+    static PASUED: number = 0;
+    static PLAYING: number = 1;
+    static STOPPED: number = 2;
+
+    constructor(lavoID: number) {
+        this.LavorazioneID = lavoID;
+        this.startTime = new Date();
+        this.state = Timer.PLAYING;
+        this.totalTime = 0;
+    }
+
+    public LavorazioneID: number;
+    public startTime: Date;
+    public totalTime: number;
+    public state: number;
 }
