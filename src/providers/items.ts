@@ -28,7 +28,7 @@ export class Items {
   public items: Array<Item[]> = [[], [], [], [], [], []];
 
   constructor(private sync: Sync, private connection: NetState, private file: File, public storage: Storage, public http: Http, public api: Api, public settings: Settings) {
-    this.items = [];
+    this.items = [[], [], [], [], [], []];
   }
 
   query(params?: any) {
@@ -45,7 +45,7 @@ export class Items {
           .toPromise()
           .then(res => {
             let data = res.json().data;
-            this.items[statoID]= data;
+            this.items[statoID] = data;
             this.storage.set(this.ITEMS_KEY, this.items);
             return data;
           })
@@ -54,10 +54,14 @@ export class Items {
     } else {
       return this.storage.get(this.ITEMS_KEY).then(res => {
         console.log(res, 'offline');
-        if (res == undefined || res == null)
+        if (res == undefined || res == null) {
+          this.items = [[], [], [], [], [], []];
           return [];
-        this.items = res[statoID];
-        return this.items;
+        }
+        this.items = res;
+        if (!this.items[statoID])
+          this.items[statoID] = [];
+        return this.items[statoID];
       })
     }
   }
@@ -66,9 +70,9 @@ export class Items {
     item.Targa = item.Targa.toUpperCase();
     if (this.connection.isAvailable()) {
       return this.api.postInsertItem(item).then(res => {
-        if (res.success) {
-          this.items.unshift(res.data);
-        }
+        if (!this.items[1]) this.items[1] = [];
+
+        this.items[1].unshift(item);
         this.storage.set(this.ITEMS_KEY, this.items);
         return res;
       });
@@ -81,7 +85,9 @@ export class Items {
       operation.type = Operation.INSERT;
       operation.body = item;
 
-      this.items.unshift(item);
+      if (!this.items[1]) this.items[1] = [];
+
+      this.items[1].unshift(item);
       this.storage.set(this.ITEMS_KEY, this.items);
 
       this.sync.addOperation(operation);
@@ -133,6 +139,67 @@ export class Items {
       return this.sync.addOperation(operation);
     }
   }
+
+  MarcaturaInsert(item: any, startDate: Date, endDate: Date) {
+    if (this.connection.isAvailable()) {
+      return this.api.MarcaturaInsert(item, startDate, endDate).then(res => {
+        console.log(res, "MarcaturaInsert");
+        return res;
+      })
+    } else {
+      let operation = new Operation();
+      operation.name = Operation.MARCATURA;
+      operation.body = {
+        item: item,
+        startDate: startDate,
+        endDate: endDate
+      }
+      return this.sync.addOperation(operation);
+    }
+  }
+
+
+  MarcaturaList(item: any) {
+    if (this.connection.isAvailable()) {
+      return this.settings.getAuth().then(auth => {
+        console.log(auth, 'auth');
+        auth.LavorazioneID = item.Lavorazione.ID;
+        return this.api.get('MarcaturaList', auth)
+          .toPromise()
+          .then(res => {
+            let data = res.json().data;
+            console.log(data);
+            return data;
+          })
+          .catch(err => [])
+      })
+    } else {
+      // return this.storage.get(this.ITEMS_KEY).then(res => {
+      //   console.log(res, 'offline');
+      //   if (res == undefined || res == null)
+      //     return [];
+      //   this.items = res[statoID];
+      //   return this.items;
+      // })
+    }
+  }
+
+  submitTarga(targa: String) {
+    if (this.connection.isAvailable()) {
+      return this.settings.getAuth().then(auth => {
+        auth.targa = targa;
+        return this.api.get("VeicoloAnagraficaList", auth)
+          .toPromise()
+          .then(res => {
+            let data = res.json().data;
+            return data.length == 0 ? false : data[0];
+          })
+      })
+    } else {
+      return Promise.resolve(false);
+    }
+  }
+
   deletePhoto(photoes: Array<any>) {
     return this.settings.getAuth().then(auth => {
       let promises = [];

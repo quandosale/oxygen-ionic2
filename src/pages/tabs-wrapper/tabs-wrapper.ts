@@ -51,7 +51,7 @@ export class TabsWrapperPage {
   onTabChange(tabTitle: string) {
     this.tabTitle = tabTitle;
     console.log(this.tabTitle, this.item);
-    if(this.item.Lavorazione) 
+    if(this.item.Lavorazione && tabTitle == "Detagglio") 
       if(this.item.Lavorazione.StatoID == 3)
         this.tabTitle = "Tempo";
   }

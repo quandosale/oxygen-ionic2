@@ -105,6 +105,30 @@ export class Api {
         });
     });
   }
+
+  MarcaturaInsert(item: any, startDate: Date, endDate: Date) {
+    return this.settings.getAuth().then(auth => {
+      var url = "http://oxygen2.ilcarrozziere.it/Api/MarcaturaInsert";
+      var data = {
+        user: auth.user,
+        key: auth.key,
+        LavorazioneID: item.Lavorazione.ID,
+        DataFine: endDate.toISOString(),
+        DataInizio: startDate.toISOString(),
+        DeviceID: "xxx's device",
+        Operatore: auth.user
+      }
+      return $.post(url, data)
+        .done(res => {
+          return res
+        })
+        .fail(err => {
+          console.log(err);
+          return err;
+        })
+    })
+  }
+
   postPhoto(item, photo) {
     const fileTransfer: TransferObject = this.transfer.create();
 

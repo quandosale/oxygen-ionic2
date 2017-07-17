@@ -48,7 +48,7 @@ export class ListMasterPage implements OnInit {
     setInterval(() => {
       for (var lavoID in this.counterList) {
         if (this.counterList.hasOwnProperty(lavoID) && this.timerList[lavoID]) {
-          if(this.timerList[lavoID].state == Timer.PLAYING)
+          if (this.timerList[lavoID].state == Timer.PLAYING)
             this.counterList[lavoID] += 1000;
         }
       }
@@ -65,6 +65,7 @@ export class ListMasterPage implements OnInit {
 
     this.items.load(this.statoID).then(res => {
       this.currentItems = res;
+      console.log(res);
       this.itemsFiltered = this.currentItems.slice();
       this.loader.dismiss();
     });
@@ -107,7 +108,6 @@ export class ListMasterPage implements OnInit {
     let modal = this.modalCtrl.create(ItemCreatePage);
     modal.onDidDismiss(data => {
       if (data.success && this.statoID == 1) {
-        this.currentItems.unshift(data.data);
         this.itemsFiltered = this.currentItems.slice();
       }
     })
@@ -195,10 +195,13 @@ export class ListMasterPage implements OnInit {
   }
 
   getCounter(item: Item) {
-    const lavoID = item.Lavorazione.ID;
-    if(!this.counterList[lavoID])
+    if (item.Lavorazione) {
+      const lavoID = item.Lavorazione.ID;
+      if (!this.counterList[lavoID])
+        return null;
+      return this.formatCounter(this.counterList[lavoID]);
+    } else
       return null;
-    return this.formatCounter(this.counterList[lavoID]);
   }
 
   formatCounter(counter) {
@@ -209,15 +212,17 @@ export class ListMasterPage implements OnInit {
 
   isPlaying(item) {
     const lavoID = item.Lavorazione.ID;
-    if(this.timerList[lavoID].state == Timer.PLAYING)
+    if (this.timerList[lavoID].state == Timer.PLAYING)
       return true;
     return false;
   }
 
   getBackgroundColor(item: Item) {
-    const lavoID = item.Lavorazione.ID;
-    if(this.getCounter(item))
-      return '#d1f1da';
+    if (item.Lavorazione) {
+      const lavoID = item.Lavorazione.ID;
+      if (this.getCounter(item))
+        return '#d1f1da';
+    }
     return 'white';
   }
 }

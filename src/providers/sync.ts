@@ -74,6 +74,10 @@ export class Sync {
                         else
                             operationsForNewItem.push(operation);
                     }
+                    if (operation.name == Operation.MARCATURA) {
+                        console.log(operation, 'Marcatura operation');
+                        promises.push(self.api.MarcaturaInsert(operation.body.item, operation.body.startDate, operation.body.endDate));
+                    }
                     if (operation.name == Operation.FOTO) {
                         console.log(operation, 'Foto operation');
                         if (operation.body.item.ID != undefined)
@@ -136,6 +140,7 @@ export class Sync {
 export class Operation {
     static PRACTICA: String = "Practica";
     static LAVO: String = "Lavo";
+    static MARCATURA: String = "Marcatura";
     static FOTO: String = "Foto";
 
     static INSERT: String = "insert";

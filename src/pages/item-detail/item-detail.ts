@@ -31,7 +31,7 @@ export class ItemDetailPage implements OnInit {
   constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, navParams: NavParams, public items: Items, public timerManager: TimerManager, public alertCtrl: AlertController) {
     this.item = navParams.get('item');
     if (this.item.Lavorazione)
-      if (this.item.Lavorazione.StatoID == 3) { this.isTempoAvailable = true;  this.lavoID = this.item.Lavorazione.ID; } 
+      if (this.item.Lavorazione.StatoID == 3) { this.isTempoAvailable = true; this.lavoID = this.item.Lavorazione.ID; }
       else this.practicaType = this.practicaTypeList[this.item.Lavorazione.StatoID];
     else
       this.practicaType = this.practicaTypeList[1];
@@ -40,12 +40,12 @@ export class ItemDetailPage implements OnInit {
   ngOnInit() {
     this.counter = this.timerManager.getTotalTime(this.lavoID);
     this.timer = this.timerManager.getTimerByLavoID(this.lavoID);
-    if(this.timer) {
-      if(this.timer.state == Timer.PLAYING)  {
+    if (this.timer) {
+      if (this.timer.state == Timer.PLAYING) {
         this.mode = "started";
         this.startCounter();
       }
-      if(this.timer.state == Timer.PASUED) 
+      if (this.timer.state == Timer.PASUED)
         this.mode = "paused";
     }
   }
@@ -65,6 +65,7 @@ export class ItemDetailPage implements OnInit {
     this.mode = 'paused';
   }
   stop() {
+    this.timerManager.pause(this.lavoID);
     this.stopCounter();
     let confirm = this.alertCtrl.create({
       title: 'Want to save this?',
@@ -80,10 +81,10 @@ export class ItemDetailPage implements OnInit {
           text: 'Yes',
           handler: () => {
             this.loading = this.loadingCtrl.create({ content: 'Saving...' });
-            // this.loading.present();
-            // this.items.addLavo(this.item, this.startTime, this.counter).then((res) => {
-            //   this.loading.dismiss();
-            // });
+            this.loading.present();
+            this.items.MarcaturaInsert(this.item, this.timerManager.getTimerByLavoID(this.lavoID).startTime, new Date()).then((res) => {
+              this.loading.dismiss();
+            });
             this._stop();
           }
         }
@@ -99,7 +100,7 @@ export class ItemDetailPage implements OnInit {
 
   formatCounter(counter) {
     var date = new Date(1970, 0, 1);
-    date.setSeconds(Math.round(counter/1000));
+    date.setSeconds(Math.round(counter / 1000));
     return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
   }
 

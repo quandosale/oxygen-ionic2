@@ -22,12 +22,19 @@
 
 
 <ion-content>
-  <form *ngIf="form" [formGroup]="form" (ngSubmit)="createItem()" class="create-form">
-    <ion-list>
+  <form *ngIf="form" [formGroup]="form" class="create-form">
+    <ion-list style="margin-bottom: 0px">
       <ion-item>
         <ion-label>Targa:</ion-label>
         <ion-input type="text" formControlName="Targa" [(ngModel)]="item.Targa"></ion-input>
       </ion-item>
+    </ion-list>
+    <ion-list style="border: none; margin-top: 32px" *ngIf="!editMode">
+      <button ion-button full (click)="submitTarga()"  [disabled]="!item.Targa">
+          Continue
+      </button>
+    </ion-list> 
+    <ion-list *ngIf="editMode || (!editMode && submittedTarga)">
       <ion-item>
         <ion-label>Marca:</ion-label>
         <ion-input type="text" formControlName="Marca" [(ngModel)]="item.Marca"></ion-input>

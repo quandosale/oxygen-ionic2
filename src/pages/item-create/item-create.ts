@@ -22,6 +22,8 @@ export class ItemCreatePage {
   loader: Loading;
   form: FormGroup;
 
+  submittedTarga: Boolean = false;
+
   constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, formBuilder: FormBuilder, public camera: Camera, public items: Items) {
     this.form = formBuilder.group({
       Targa: ['', Validators.required],
@@ -108,6 +110,29 @@ export class ItemCreatePage {
       this.items.edit(this.item).then(res => {
         this.loader.dismiss();
         this.viewCtrl.dismiss(res);
+      })
+    }
+  }
+
+  submitTarga() {
+    if (this.item.Targa) {
+      var targa = this.item.Targa;
+      this.item = new Item();
+      this.item.Targa = targa;
+      
+      this.loader = this.loadingCtrl.create({
+        content: "Fetching Information..."
+      });
+      this.loader.present();
+      this.items.submitTarga(this.item.Targa).then(res => {
+        if(res) {
+          this.item.Marca = res.Marca || "";
+          this.item.Modello = res.Modello || "";
+          this.item.Cognome = res.Cognome || "";
+          this.item.Nome = res.Nome || "";
+        }
+        this.loader.dismiss();
+        this.submittedTarga = true;
       })
     }
   }

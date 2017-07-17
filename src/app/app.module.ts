@@ -23,6 +23,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { WelcomePage } from '../pages/welcome/welcome';
 import { ActionPage } from '../pages/action/action';
+import { DocumentPage } from '../pages/document/document';
 import { TabsWrapperPage } from '../pages/tabs-wrapper/tabs-wrapper';
 import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
 import { Api } from '../providers/api';
@@ -92,6 +93,7 @@ export function declarations() {
     TutorialPage,
     WelcomePage,
     PhotoPage,
+    DocumentPage,
     ActionPage,
     TabsWrapperPage,
     LazyImgComponent,
@@ -107,6 +109,7 @@ export function entryComponents() {
     ItemCreatePage,
     ItemDetailPage,
     ListMasterPage,
+    DocumentPage,
     LoginPage,
     MapPage,
     MenuPage,

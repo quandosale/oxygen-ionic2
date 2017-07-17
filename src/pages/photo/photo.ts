@@ -50,6 +50,7 @@ export class PhotoPage {
                 photo.Url = photo.Url.replace(/\\/g, '/');
                 this.check.push(false);
             })
+            console.log($('.local-image'), 'asdf');
         }).catch(err => {
             console.log(err);
             this.loader.dismiss();
@@ -70,7 +71,7 @@ export class PhotoPage {
                     console.log(res);
                     let newPhoto = res.data[0];
                     newPhoto.Url.replace(/\\/g, '/');
-                    this.photoes.push(newPhoto);
+                    this.photoes.unshift(newPhoto);
                     this.loader.dismiss();
                 }).catch((err) => {
                     this.loader.dismiss();
@@ -97,7 +98,7 @@ export class PhotoPage {
                 let newPhoto = res.data[0];
                 newPhoto.Url.replace(/\\/g, '/');
                 console.log(newPhoto, 'addPhoto');
-                this.photoes.push(newPhoto);
+                this.photoes.unshift(newPhoto);
                 console.log(this.photoes);
                 this.loader.dismiss();
             }).catch((err) => {
