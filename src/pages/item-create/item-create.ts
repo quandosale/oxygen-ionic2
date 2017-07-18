@@ -121,7 +121,7 @@ export class ItemCreatePage {
       this.item.Targa = targa;
       
       this.loader = this.loadingCtrl.create({
-        content: "Fetching Information..."
+        content: "New customer. I'm seeking in the master database"
       });
       this.loader.present();
       this.items.submitTarga(this.item.Targa).then(res => {

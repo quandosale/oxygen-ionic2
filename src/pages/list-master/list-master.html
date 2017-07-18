@@ -14,8 +14,12 @@
     </ion-buttons>
   </ion-navbar>  
   <ion-navbar *ngIf="isSearching">
-    <input type="text" placeholder="Cerca Practica" id="searchbox" (ngModelChange)="filterChange($event)" style="padding: 5px" [(ngModel)]="filterString"> 
+    <input type="text" placeholder="Cerca Practica" id="searchbox" style="padding: 5px" [(ngModel)]="filterString"> 
     <ion-buttons end>
+      
+      <button ion-button icon-only (click)="search()">
+        <ion-icon name="search"></ion-icon>
+      </button>
       <button ion-button icon-only (click)="searchToggle(false)" style="margin-left: 2em">
         Annulla
       </button>
@@ -27,7 +31,7 @@
 <ion-content>
   <ion-list [virtualScroll]="itemsFiltered" [hidden]="itemsFiltered.length == 0">
     <ion-item-sliding *virtualItem="let item">
-      <button ion-item (click)="openItem(item)"  [ngStyle]="{'background': getBackgroundColor(item)}">
+      <button ion-item (click)="openItem(item)"  [ngStyle]="{'background': getBackgroundColor(item)}" class="practica-item">
         <ion-avatar item-start class="item-avatar android" showWhen="android" *ngIf="statoID==3">
           01
         </ion-avatar>

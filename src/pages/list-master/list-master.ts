@@ -9,7 +9,7 @@ import { Platform } from 'ionic-angular';
 import { ItemCreatePage } from '../item-create/item-create';
 import { TabsWrapperPage } from '../tabs-wrapper/tabs-wrapper';
 import { Item } from '../../models/item';
-import { Items } from '../../providers/providers';
+import { Items, NetState } from '../../providers/providers';
 import { TimerManager, Timer } from '../../providers/timer';
 
 
@@ -41,7 +41,8 @@ export class ListMasterPage implements OnInit {
     public alertCtrl: AlertController,
     private backgroundMode: BackgroundMode,
     private timerManager: TimerManager,
-    private toastCtrl: ToastController) {
+    private toastCtrl: ToastController,
+    private connection: NetState) {
 
     if (this.navParams.get('statoID')) this.statoID = this.navParams.get('statoID')
 
@@ -55,6 +56,12 @@ export class ListMasterPage implements OnInit {
     }, 1000);
   }
 
+
+
+  ionViewDidLoad() {
+    this.itemsFiltered = this.currentItems.slice();
+  }
+
   ngOnInit() {
     this.currentItems = [];
     this.itemsFiltered = [];
@@ -65,7 +72,6 @@ export class ListMasterPage implements OnInit {
 
     this.items.load(this.statoID).then(res => {
       this.currentItems = res;
-      console.log(res);
       this.itemsFiltered = this.currentItems.slice();
       this.loader.dismiss();
     });
@@ -171,19 +177,34 @@ export class ListMasterPage implements OnInit {
     }
     this.isSearching = !this.isSearching;
     if (this.isSearching) {
+      this.itemsFiltered = [];
       $('#searchbox').focus();
     }
   }
 
   getFilteredItems(filter) {
     this.itemsFiltered = [];
+    if (!this.connection.isAvailable()) {
+      this.itemsFiltered = this.currentItems.filter(item => {
+        const targa = item.Targa.toLowerCase();
+        if (targa.indexOf(filter.toLowerCase()) == -1)
+          return false;
+        return true;
+      })
+    } else {
+      this.loader = this.loadingCtrl.create({
+        content: "Loading..."
+      });
+      this.loader.present();
+      this.items.searchItem(filter).then(res => {
+        this.itemsFiltered = res;
+        this.loader.dismiss();
+      });
+    }
+  }
 
-    this.itemsFiltered = this.currentItems.filter(item => {
-      const targa = item.Targa.toLowerCase();
-      if (targa.indexOf(filter.toLowerCase()) == -1)
-        return false;
-      return true;
-    })
+  search() {
+      this.getFilteredItems(this.filterString);
   }
 
   filterChange(e) {
@@ -199,7 +220,7 @@ export class ListMasterPage implements OnInit {
       const lavoID = item.Lavorazione.ID;
       if (!this.counterList[lavoID])
         return null;
-      return this.formatCounter(this.counterList[lavoID]);
+      return this.formatCounter(this.counterList[lavoID] + this.items.totalTime[lavoID]);
     } else
       return null;
   }

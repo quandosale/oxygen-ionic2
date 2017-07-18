@@ -26,6 +26,7 @@ export class Items {
   private ITEMS_KEY: string = 'items';
   private PHOTOS_KEY: string = 'photoes';
   public items: Array<Item[]> = [[], [], [], [], [], []];
+  public totalTime: any = {};
 
   constructor(private sync: Sync, private connection: NetState, private file: File, public storage: Storage, public http: Http, public api: Api, public settings: Settings) {
     this.items = [[], [], [], [], [], []];
@@ -47,7 +48,11 @@ export class Items {
             let data = res.json().data;
             this.items[statoID] = data;
             this.storage.set(this.ITEMS_KEY, this.items);
-            return data;
+            if (statoID == 3) {
+              return this._loadTotalTime(this.items[statoID], auth).then(res => data);
+            }
+            else
+              return data;
           })
           .catch(err => [])
       })
@@ -62,6 +67,40 @@ export class Items {
         if (!this.items[statoID])
           this.items[statoID] = [];
         return this.items[statoID];
+      })
+    }
+  }
+
+  _loadTotalTime(items: Array<Item>, auth) {
+    var promises = [];
+    items.forEach(item => {
+      auth.LavorazioneID = item.Lavorazione.ID;
+      promises.push(
+        this.api.get('MarcaturaList', auth).toPromise()
+      )
+    });
+    return Promise.all(promises).then(res => {
+      var marcaList = res.map(x => x.json().data).filter(e => e.length != 0);
+      marcaList.forEach(marca => {
+        this.totalTime[marca[0].LavorazioneID] = 0;
+        marca.forEach(element => {
+          this.totalTime[marca[0].LavorazioneID] += element.TempoTotale;
+        });
+      });
+      return true;
+    })
+  }
+
+  searchItem(keyword: string) {
+    if(this.connection.isAvailable()) {
+      return this.settings.getAuth().then(auth => {
+        auth.RicercaLibera = keyword;
+        return this.api.get('PraticaList', auth)
+          .toPromise()
+          .then(res => {
+            let data = res.json().data;
+            return data;
+          })
       })
     }
   }
@@ -141,6 +180,9 @@ export class Items {
   }
 
   MarcaturaInsert(item: any, startDate: Date, endDate: Date) {
+    console.log(this.totalTime[item.Lavorazione.ID]);
+    this.totalTime[item.Lavorazione.ID] += (endDate.getTime() - startDate.getTime());
+    console.log(this.totalTime[item.Lavorazione.ID]);
     if (this.connection.isAvailable()) {
       return this.api.MarcaturaInsert(item, startDate, endDate).then(res => {
         console.log(res, "MarcaturaInsert");
@@ -192,7 +234,21 @@ export class Items {
           .toPromise()
           .then(res => {
             let data = res.json().data;
-            return data.length == 0 ? false : data[0];
+            if (data.length != 0)
+              return data[0];
+            else {
+              auth.tipoVeicolo = 1;
+              return this.api.get('TargaGet', auth)
+                .toPromise()
+                .then(res => {
+                  var data = JSON.parse(res.json().message);
+                  
+                  return {
+                    Marca: data.nome_marca,
+                    Modello: data.nome_modello
+                  };
+                })
+            }
           })
       })
     } else {

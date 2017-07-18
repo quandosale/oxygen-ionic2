@@ -3,7 +3,7 @@ import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Settings } from './settings';
 import { Transfer, FileUploadOptions, TransferObject } from '@ionic-native/transfer';
-
+import { Device } from '@ionic-native/device';
 declare var $: any;
 /**
  * Api is a generic REST Api handler. Set your API url first.
@@ -12,7 +12,7 @@ declare var $: any;
 export class Api {
   url: string = 'http://oxygen2.ilcarrozziere.it/Api';
 
-  constructor(public http: Http, public settings: Settings, private transfer: Transfer) {
+  constructor(public http: Http, public settings: Settings, private transfer: Transfer, private device: Device) {
   }
 
   get(endpoint: string, params?: any, options?: RequestOptions) {
@@ -107,6 +107,8 @@ export class Api {
   }
 
   MarcaturaInsert(item: any, startDate: Date, endDate: Date) {
+    var uuid = this.device.uuid || "unknown";
+    console.log(uuid, 'uuid');
     return this.settings.getAuth().then(auth => {
       var url = "http://oxygen2.ilcarrozziere.it/Api/MarcaturaInsert";
       var data = {
@@ -115,7 +117,7 @@ export class Api {
         LavorazioneID: item.Lavorazione.ID,
         DataFine: endDate.toISOString(),
         DataInizio: startDate.toISOString(),
-        DeviceID: "xxx's device",
+        DeviceID: uuid,
         Operatore: auth.user
       }
       return $.post(url, data)

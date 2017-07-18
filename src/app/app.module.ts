@@ -47,6 +47,7 @@ import { LazyLoadDirective } from '../global/directives/';
 import { IonicImageViewerModule } from 'ionic-img-viewer';
 import { ImgcacheService } from '../global/services/';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
+import { Device } from '@ionic-native/device';
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function HttpLoaderFactory(http: Http) {
@@ -145,6 +146,7 @@ export function providers() {
     Network,
     BackgroundMode,
     PhotoViewer,
+    Device,
 
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development

@@ -226,6 +226,23 @@ form.create-form {
   right: 0;
   bottom: 0;
 }
+.deletion-mask {
+    width: calc(100% - 2px);
+    padding-top: calc(100% - 2px);
+    position: absolute;
+    margin-top: calc(2px - 100%);
+    background: rgba(56,126,245,0.5);
+    z-index: 10;
+}
+  
+.practica-item.item-md ion-avatar {
+  width: 40px;
+  height: 40px;
+}
 
+.practica-item.item-ios ion-avatar {
+  width: 36px;
+  height: 36px;
+}
 
 /*# sourceMappingURL=masonry.css.map */

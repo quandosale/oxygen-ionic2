@@ -38,7 +38,9 @@ export class ItemDetailPage implements OnInit {
   }
 
   ngOnInit() {
-    this.counter = this.timerManager.getTotalTime(this.lavoID);
+    console.log(this.items.totalTime[this.lavoID], 'totaltime');
+    if(!this.items.totalTime[this.lavoID]) this.items.totalTime[this.lavoID] = 0;
+    this.counter = this.timerManager.getTotalTime(this.lavoID) + this.items.totalTime[this.lavoID];
     this.timer = this.timerManager.getTimerByLavoID(this.lavoID);
     if (this.timer) {
       if (this.timer.state == Timer.PLAYING) {
@@ -75,6 +77,7 @@ export class ItemDetailPage implements OnInit {
           text: 'No',
           handler: () => {
             this._stop();
+            this.counter = this.timerManager.getTotalTime(this.lavoID) + this.items.totalTime[this.lavoID];
           }
         },
         {
@@ -94,7 +97,6 @@ export class ItemDetailPage implements OnInit {
   }
   _stop() {
     this.mode = 'notStarted';
-    this.counter = 0;
     return this.timerManager.stop(this.lavoID);
   }
 
