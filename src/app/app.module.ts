@@ -20,6 +20,7 @@ import { SearchPage } from '../pages/search/search';
 import { SettingsPage } from '../pages/settings/settings';
 import { SignupPage } from '../pages/signup/signup';
 import { TabsPage } from '../pages/tabs/tabs';
+import { PDFViewer } from '../pages/pdf-viewer/pdf-viewer';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { WelcomePage } from '../pages/welcome/welcome';
 import { ActionPage } from '../pages/action/action';
@@ -48,6 +49,8 @@ import { IonicImageViewerModule } from 'ionic-img-viewer';
 import { ImgcacheService } from '../global/services/';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { Device } from '@ionic-native/device';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { PdfViewerComponent } from 'ng2-pdf-viewer';
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function HttpLoaderFactory(http: Http) {
@@ -81,6 +84,7 @@ export function declarations() {
     MyApp,
     CardsPage,
     ContentPage,
+    PdfViewerComponent,
     ItemCreatePage,
     ItemDetailPage,
     ListMasterPage,
@@ -89,6 +93,7 @@ export function declarations() {
     MenuPage,
     SearchPage,
     SettingsPage,
+    PDFViewer,
     SignupPage,
     TabsPage,
     TutorialPage,
@@ -115,6 +120,7 @@ export function entryComponents() {
     MapPage,
     MenuPage,
     SearchPage,
+    PDFViewer,
     SettingsPage,
     SignupPage,
     TabsPage,
@@ -147,6 +153,7 @@ export function providers() {
     BackgroundMode,
     PhotoViewer,
     Device,
+    InAppBrowser,
 
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development

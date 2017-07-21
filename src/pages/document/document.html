@@ -21,8 +21,9 @@
   <div class="masonry" *ngIf="documents">
     <div class="masonry-item" *ngFor="let document of documents; let i = index;" (click)="selectDocument(document, i)">
       <ion-checkbox [(ngModel)]="check[i]" *ngIf="action"></ion-checkbox>
-      <lazy-img [isDocument]="true" [inputSrc]="document" [action]="action" *ngIf="!document.local"></lazy-img>
-      <img imageViewer [src]="document.Url" style="display:block" *ngIf="document.local" style="
+      <a href="https://vadimdez.github.io/ng2-pdf-viewer/pdf-test.pdf" target="__blank"><img src="/assets/img/rundmc-live.png" alt="" *ngIf="!document.IsImage"></a>
+      <lazy-img [isDocument]="true" [inputSrc]="document" [action]="action" *ngIf="!document.local && document.IsImage"></lazy-img>
+      <img imageViewer [src]="document.Url" style="display:block" *ngIf="document.local && document.IsImage" style="
         height: calc(50vw - 2px);
         width: 50vw;
         object-fit: cover;

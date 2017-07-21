@@ -5,6 +5,7 @@ import { LoadingController, Loading, } from 'ionic-angular';
 import { ImagePicker } from '@ionic-native/image-picker';
 import { ListMasterPage } from '../list-master/list-master';
 import { Items } from '../../providers/providers';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
 declare var $: any;
 
@@ -23,7 +24,7 @@ export class DocumentPage {
     documents: Array<any> = [];
     server_url: string = 'http://oxygen2.ilcarrozziere.it';
 
-    constructor(private documentViewer: PhotoViewer, public loadingCtrl: LoadingController, private imagePicker: ImagePicker, public navCtrl: NavController, private navParams: NavParams, private items: Items, private camera: Camera) {
+    constructor(private iab: InAppBrowser, private documentViewer: PhotoViewer, public loadingCtrl: LoadingController, private imagePicker: ImagePicker, public navCtrl: NavController, private navParams: NavParams, private items: Items, private camera: Camera) {
         this.item = navParams.get('item');
         console.log(this.item);
         this.items.actionListner().subscribe(res => {
@@ -122,6 +123,7 @@ export class DocumentPage {
 
     }
     selectDocument(document, i) {
+        if(!document.IsImage) return;
         this.check[i] = !this.check[i];
         if (this.check[i]) {
             this.selectedDocuments.push(document.ID);
@@ -160,5 +162,9 @@ export class DocumentPage {
             console.log(err);
             this.loader.dismiss();
         });
+    }
+    openPDF(url) {
+        const browser = this.iab.create('http://oxygen2.ilcarrozziere.it//_Private/Pratica\\96\\Documenti\\191\\R8mi.pdf');
+        browser.show();
     }
 }

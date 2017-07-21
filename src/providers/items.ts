@@ -448,7 +448,8 @@ export class Items {
               documentsData[practicaID] = res.data.map(document => {
                 return {
                   ID: document.ID,
-                  Url: document.Url
+                  Url: document.Url,
+                  IsImage: document.IsImage
                 }
               });
               this.storage.set(this.DOCUMENTS_KEY, documentsData);
