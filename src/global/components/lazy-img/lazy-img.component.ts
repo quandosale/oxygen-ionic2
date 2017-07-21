@@ -15,6 +15,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class LazyImgComponent {
 
   @Input() inputSrc: any;
+  @Input() isDocument: any;
   @Input() action: any = null;
   server_url: string = 'http://oxygen2.ilcarrozziere.it';
 
@@ -24,7 +25,11 @@ export class LazyImgComponent {
   constructor() {
   }
   ngOnInit() {
-    console.log(this.inputSrc);
+    
+    if(this.isDocument) {
+      this.thumbnail = 'http://oxygen2.ilcarrozziere.it/' + this.inputSrc.Url;
+      return;
+    }
     this.thumbnail = `http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineGet?ID=${this.inputSrc.ID}&width=300&&height=300&mode=crop&user=fabio&key=fabio`;
   }
 }

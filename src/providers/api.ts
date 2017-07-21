@@ -158,4 +158,32 @@ export class Api {
         })
     })
   }
+
+  postDocument(item, document) {
+    const fileTransfer: TransferObject = this.transfer.create();
+
+    return this.settings.getAuth().then(auth => {
+      item.user = auth.user;
+      item.key = auth.key;
+
+      let options: FileUploadOptions = {
+        fileKey: 'file',
+        fileName: '1.jpg',
+        headers: {},
+        params: {
+          user: auth.user,
+          key: auth.key,
+          PraticaID: item.ID
+        }
+      }
+      console.log(document);
+      return fileTransfer.upload(document, 'http://oxygen2.ilcarrozziere.it/Api/PraticaDocumentoAdd', options)
+        .then((data) => {
+          return JSON.parse(data.response);
+        }, (err) => {
+          console.log(err);
+          return err;
+        })
+    })
+  }
 }

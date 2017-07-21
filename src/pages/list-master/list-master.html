@@ -32,10 +32,10 @@
   <ion-list [virtualScroll]="itemsFiltered" [hidden]="itemsFiltered.length == 0">
     <ion-item-sliding *virtualItem="let item">
       <button ion-item (click)="openItem(item)"  [ngStyle]="{'background': getBackgroundColor(item)}" class="practica-item">
-        <ion-avatar item-start class="item-avatar android" showWhen="android" *ngIf="statoID==3">
+        <ion-avatar item-start class="item-avatar android" showWhen="android" *ngIf="statoID==3 && item.Lavorazione">
           {{item.Lavorazione.CodiceTappo || 'ND'}}
         </ion-avatar>
-        <ion-avatar item-start class="item-avatar ios" showWhen="ios" *ngIf="statoID==3">
+        <ion-avatar item-start class="item-avatar ios" showWhen="ios" *ngIf="statoID==3 && item.Lavorazione">
           {{item.Lavorazione.CodiceTappo || 'ND'}}
         </ion-avatar>
         <h2 style="color: #188b37; font-size: 1.9rem;">{{item.Targa}}</h2>

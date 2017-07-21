@@ -1,5 +1,35 @@
 <ion-content>
 
-Document
+  <div padding class="photo-button-group">
+    <button ion-button (click)="fromCamera()">
+        Nuova
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <ion-icon name="add"></ion-icon>
+    </button>
+
+    <button ion-button (click)="fromGallery()">
+        Rullino 
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <ion-icon name="attach"></ion-icon>
+    </button>
+  </div>
+
+  <button ion-button (click)="refresh()" id="refresh_documentlist" style="display:none">
+    </button>
+  <input type="file" id="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)"
+  />
+  <div class="masonry" *ngIf="documents">
+    <div class="masonry-item" *ngFor="let document of documents; let i = index;" (click)="selectDocument(document, i)">
+      <ion-checkbox [(ngModel)]="check[i]" *ngIf="action"></ion-checkbox>
+      <lazy-img [isDocument]="true" [inputSrc]="document" [action]="action" *ngIf="!document.local"></lazy-img>
+      <img imageViewer [src]="document.Url" style="display:block" *ngIf="document.local" style="
+        height: calc(50vw - 2px);
+        width: 50vw;
+        object-fit: cover;
+        position: absolute;
+        padding-right: 2px;">
+       <div class="deletion-mask" style="width: 100%; height: 100%" *ngIf="check[i]"></div> 
+    </div>
+  </div>
 
 </ion-content>

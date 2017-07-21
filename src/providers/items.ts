@@ -18,6 +18,7 @@ declare var $: any;
 export class Items {
   photoes: Array<any>;
   private selectedPhotoSubject = new Subject<Array<any>>();
+  private selectedDocumentSubject = new Subject<Array<any>>();
   private selected: Number = 0;
   private actionSubject = new Subject<any>();
   private refreshSubject = new Subject<any>();
@@ -25,6 +26,7 @@ export class Items {
 
   private ITEMS_KEY: string = 'items';
   private PHOTOS_KEY: string = 'photoes';
+  private DOCUMENTS_KEY: string = 'documents';
   public items: Array<Item[]> = [[], [], [], [], [], []];
   public totalTime: any = {};
 
@@ -361,6 +363,114 @@ export class Items {
     }
   }
 
+  
+
+  deleteDocument(photoes: Array<any>) {
+    return this.settings.getAuth().then(auth => {
+      let promises = [];
+      photoes.forEach(photoID => {
+        let data = {
+          user: auth.user,
+          key: auth.key,
+          ID: photoID
+        };
+        let promise = $.post("http://oxygen2.ilcarrozziere.it/Api/PraticaDocumentoRemove", data)
+          .done(res => res).fail(err => err);
+        promises.push(promise);
+      });
+      return Promise.all(promises);
+    });
+  }
+
+  addDocument(item: any, document: any) {
+    var practicaID = item.ID;
+    if (this.connection.isAvailable()) {
+      return this.api.postDocument(item, document).then(res => {
+        this.storage.get(this.PHOTOS_KEY).then(documentsData => {
+          if (documentsData == null || documentsData == undefined)
+            documentsData = {};
+          if (documentsData[practicaID] == undefined)
+            documentsData[practicaID] = [];
+          console.log(res, 'addDocument');
+          res.data.forEach(photo => {
+            documentsData[practicaID].push({
+              ID: photo.ID,
+              Url: photo.Url
+            })
+          });
+
+          this.storage.set(this.DOCUMENTS_KEY, documentsData);
+        })
+        return res;
+      });
+    } else {
+      let op = new Operation();
+      op.name = Operation.DOCUMENT;
+      op.type = Operation.INSERT;
+      op.body = {
+        item: item,
+        document: document
+      };
+      this.sync.addOperation(op);
+
+      if (practicaID == undefined) practicaID = item.created_at;
+      this.storage.get(this.PHOTOS_KEY).then(documentsData => {
+        if (documentsData == null || documentsData == undefined)
+          documentsData = {};
+        if (documentsData[practicaID] == undefined)
+          documentsData[practicaID] = [];
+        documentsData[practicaID].push({
+          Url: document,
+          local: true
+        });
+
+        this.storage.set(this.DOCUMENTS_KEY, documentsData);
+      })
+      return Promise.resolve({
+        data: [{
+          Url: document,
+          local: true
+        }]
+      })
+    }
+  }
+
+  getDocuments(practicaID) {
+    if (this.connection.isAvailable()) {
+      return this.settings.getAuth().then(auth => {
+        var url = `http://oxygen2.ilcarrozziere.it/Api/PraticaDocumentoList?user=${auth.user}&key=${auth.key}&PraticaID=${practicaID}`;
+        return $.post(url)
+          .done(res => {
+            console.log(res, 'document');
+            this.storage.get(this.DOCUMENTS_KEY).then(documentsData => {
+              if (documentsData == null || documentsData == undefined)
+                documentsData = {};
+              documentsData[practicaID] = res.data.map(document => {
+                return {
+                  ID: document.ID,
+                  Url: document.Url
+                }
+              });
+              this.storage.set(this.DOCUMENTS_KEY, documentsData);
+            })
+            return res;
+          })
+          .fail(err => {
+            console.log(err);
+            return err;
+          });
+      })
+    } else {
+      return this.storage.get(this.DOCUMENTS_KEY).then(documentsData => {
+        if (documentsData == undefined || documentsData == null)
+          return { data: [] };
+        let result;
+        result = documentsData[practicaID] ? documentsData[practicaID] : [];
+        return { data: result };
+      })
+    }
+  }
+
   // delete(item: Item) {
   //   var itemId = this.items.indexOf(item);
   //   this.items.splice(itemId, 1);
@@ -375,6 +485,9 @@ export class Items {
   setSelectedPhotoes(photoesSelected) {
     this.selectedPhotoSubject.next(photoesSelected);
   }
+  setSelectedDocuments(documentsSelected) {
+    this.selectedDocumentSubject.next(documentsSelected);
+  }
   setAction(action) {
     this.actionSubject.next(action);
   }
@@ -385,6 +498,10 @@ export class Items {
   selectedPhotoListner(): Observable<Array<any>> {
     this.selectedPhotoSubject = new Subject<Array<any>>();
     return this.selectedPhotoSubject.asObservable();
+  }
+  selectedDocumentListner(): Observable<Array<any>> {
+    this.selectedDocumentSubject = new Subject<Array<any>>();
+    return this.selectedDocumentSubject.asObservable();
   }
   actionListner(): Observable<any> {
     this.actionSubject = new Subject<any>();
@@ -397,6 +514,7 @@ export class Items {
 
   unsubscribe() {
     this.selectedPhotoSubject.unsubscribe();
+    this.selectedDocumentSubject.unsubscribe();
     this.actionSubject.unsubscribe();
     this.refreshSubject.unsubscribe();
   }

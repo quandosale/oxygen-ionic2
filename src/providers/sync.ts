@@ -85,6 +85,13 @@ export class Sync {
                         else
                             operationsForNewItem.push(operation);
                     }
+                    if (operation.name == Operation.DOCUMENT) {
+                        console.log(operation, 'Document operation');
+                        if (operation.body.item.ID != undefined)
+                            promises.push(self.api.postDocument(operation.body.item, operation.body.document));
+                        else
+                            operationsForNewItem.push(operation);
+                    }
                 });
                 console.log(operationsForNewItem, 'operationsForNewItem');
                 Promise.all(promises).then(res => {
@@ -101,6 +108,8 @@ export class Sync {
                                     promisesForNewItems.push(self.api.postLovo(op.body.item, op.body.date, op.body.secs));
                                 if (op.name == Operation.FOTO)
                                     promisesForNewItems.push(self.api.postPhoto(op.body.item, op.body.photo));
+                                if (op.name == Operation.DOCUMENT)
+                                    promisesForNewItems.push(self.api.postDocument(op.body.item, op.body.document));
                             }
                         });
                     });
@@ -142,6 +151,7 @@ export class Operation {
     static LAVO: String = "Lavo";
     static MARCATURA: String = "Marcatura";
     static FOTO: String = "Foto";
+    static DOCUMENT: String = "Document";
 
     static INSERT: String = "insert";
     static UPDATE: String = "update";

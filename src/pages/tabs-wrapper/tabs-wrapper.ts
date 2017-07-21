@@ -18,6 +18,7 @@ export class TabsWrapperPage {
 
   loading: Loading;
   selectedPhotoes: Array<any> = [];
+  selectedDocuments: Array<any> = [];
   protected tabTitle: string = "";
   item: any;
   action: any = null;
@@ -31,6 +32,10 @@ export class TabsWrapperPage {
     this.items.selectedPhotoListner().subscribe(res => {
       this.selectedPhotoes = res;
       console.log(this.selectedPhotoes, 'selectedPHotoes');
+    });
+    this.items.selectedDocumentListner().subscribe(res => {
+      this.selectedDocuments = res;
+      console.log(this.selectedDocuments, 'selectedDocuments');
     });
     if (!this.connection.isAvailable()) this.netstatus = false;
   }
@@ -51,8 +56,8 @@ export class TabsWrapperPage {
   onTabChange(tabTitle: string) {
     this.tabTitle = tabTitle;
     console.log(this.tabTitle, this.item);
-    if(this.item.Lavorazione && tabTitle == "Detagglio") 
-      if(this.item.Lavorazione.StatoID == 3)
+    if (this.item.Lavorazione && tabTitle == "Detagglio")
+      if (this.item.Lavorazione.StatoID == 3)
         this.tabTitle = "Tempo";
   }
   presentPopover() {
@@ -64,7 +69,9 @@ export class TabsWrapperPage {
     })
   }
   done() {
-    let message = `Do you want to ${this.action} fotos?`;
+    let message = `Do you want to delete `;
+    if (this.tabTitle == 'Foto') message += 'Fotos ?';
+    else message += 'Documents ?';
     let confirm = this.alertCtrl.create({
       title: 'Confirm',
       message: message,
@@ -79,17 +86,26 @@ export class TabsWrapperPage {
         {
           text: 'Yes',
           handler: () => {
-            console.log(this.selectedPhotoes, 'selectedPhotoes');
             this.loading = this.loadingCtrl.create({ content: 'Deleting...' });
             this.loading.present();
 
-            this.items.deletePhoto(this.selectedPhotoes).then(res => {
+            if (this.tabTitle == 'Foto') {
+              this.items.deletePhoto(this.selectedPhotoes).then(res => {
 
-              this.items.setRefresh();
-              this.loading.dismiss();
-            }).catch(err => {
-              this.loading.dismiss();
-            })
+                this.items.setRefresh();
+                this.loading.dismiss();
+              }).catch(err => {
+                this.loading.dismiss();
+              })
+            } else {
+              this.items.deleteDocument(this.selectedDocuments).then(res => {
+
+                this.items.setRefresh();
+                this.loading.dismiss();
+              }).catch(err => {
+                this.loading.dismiss();
+              })
+            }
             this.action = null;
             this.setAction(this.action);
           }
