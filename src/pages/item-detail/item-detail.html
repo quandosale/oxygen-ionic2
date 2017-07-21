@@ -3,7 +3,7 @@
   <div class="tempo">
     <div class="profile">
       <ion-avatar item-start class="item-avatar android" *ngIf="isTempoAvailable">
-        01
+        {{item.Lavorazione.CodiceTappo || 'ND'}}
       </ion-avatar>
       <div class="space" *ngIf="!isTempoAvailable"></div>
       <h1>{{item.Targa}}</h1>

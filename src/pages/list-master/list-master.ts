@@ -116,6 +116,8 @@ export class ListMasterPage implements OnInit {
       if (data.success && this.statoID == 1) {
         this.itemsFiltered = this.currentItems.slice();
       }
+      if (data.success)
+        this.openItem(data.data);
     })
     modal.present();
   }
@@ -204,7 +206,7 @@ export class ListMasterPage implements OnInit {
   }
 
   search() {
-      this.getFilteredItems(this.filterString);
+    this.getFilteredItems(this.filterString);
   }
 
   filterChange(e) {
