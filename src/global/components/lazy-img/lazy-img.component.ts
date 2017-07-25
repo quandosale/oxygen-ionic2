@@ -25,9 +25,11 @@ export class LazyImgComponent {
   constructor() {
   }
   ngOnInit() {
-    
     if(this.isDocument) {
-      this.thumbnail = 'http://oxygen2.ilcarrozziere.it/' + this.inputSrc.Url;
+      if(!this.inputSrc.IsImage) 
+        this.thumbnail = this.server_url + '/' + this.inputSrc.Url.replace('.pdf', '_thumb.jpg?height=300&width=300&mode=crop');
+      else
+        this.thumbnail = 'http://oxygen2.ilcarrozziere.it/' + this.inputSrc.Url + '?height=300&width=300&mode=crop';
       return;
     }
     this.thumbnail = `http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineGet?ID=${this.inputSrc.ID}&width=300&&height=300&mode=crop&user=fabio&key=fabio`;

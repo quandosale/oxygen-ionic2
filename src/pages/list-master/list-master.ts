@@ -1,6 +1,5 @@
 import { Sync } from '../../providers/sync';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { BackgroundMode } from '@ionic-native/background-mode';
 import { Loading, ModalController, NavController, NavParams } from 'ionic-angular';
 import { AlertController, ToastController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
@@ -39,7 +38,6 @@ export class ListMasterPage implements OnInit {
     public items: Items,
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
-    private backgroundMode: BackgroundMode,
     private timerManager: TimerManager,
     private toastCtrl: ToastController,
     private connection: NetState) {
@@ -76,7 +74,6 @@ export class ListMasterPage implements OnInit {
       this.itemsFiltered = this.currentItems.slice();
       this.loader.dismiss();
     });
-    this.backgroundMode.enable();
 
     this.sync.syncListner().subscribe(res => {
       let syncloader = this.loadingCtrl.create({

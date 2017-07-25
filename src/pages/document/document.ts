@@ -167,4 +167,8 @@ export class DocumentPage {
         const browser = this.iab.create('http://oxygen2.ilcarrozziere.it//_Private/Pratica\\96\\Documenti\\191\\R8mi.pdf');
         browser.show();
     }
+
+    getDocThumbnail(url: string) {
+        return this.server_url + '/' + url.replace('.pdf', '_thumb.jpg?height=300&width=300&mode=crop');
+    }
 }
