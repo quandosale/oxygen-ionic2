@@ -172,7 +172,9 @@ export function providers() {
         deps: [Http]
       }
     }),
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      clickBlock: false
+    }),
     IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],

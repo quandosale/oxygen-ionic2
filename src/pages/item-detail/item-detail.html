@@ -13,7 +13,7 @@
     <div class="timer-control" *ngIf="isTempoAvailable">
       <ion-grid>
         <ion-row class="play" *ngIf="mode=='notStarted' || mode=='paused'">
-          <ion-col col-12 (click)="play()">
+          <ion-col col-12 (click)="play()" tappable>
             <img src="assets/img/play_btn.png" alt="" *ngIf="mode=='notStarted'">
             <img src="assets/img/resume_btn.png" alt="" *ngIf="mode=='paused'">
             <h3>{{mode=='notStarted'?'INIZIA LAVORO':'Riprendi Lavoro'}}</h3>
