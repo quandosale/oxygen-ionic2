@@ -32,14 +32,14 @@
   <ion-list [virtualScroll]="itemsFiltered" [hidden]="itemsFiltered.length == 0">
     <ion-item-sliding *virtualItem="let item">
       <button ion-item (click)="openItem(item)"  [ngStyle]="{'background': getBackgroundColor(item)}" class="practica-item">
-        <ion-avatar item-start class="item-avatar android" showWhen="android" *ngIf="statoID==3 && item.Lavorazione">
+        <ion-avatar item-start class="item-avatar android" showWhen="android" *ngIf="statoID==4 && item.Lavorazione">
           {{item.Lavorazione.CodiceTappo || 'ND'}}
         </ion-avatar>
-        <ion-avatar item-start class="item-avatar ios" showWhen="ios" *ngIf="statoID==3 && item.Lavorazione">
+        <ion-avatar item-start class="item-avatar ios" showWhen="ios" *ngIf="statoID==4 && item.Lavorazione">
           {{item.Lavorazione.CodiceTappo || 'ND'}}
         </ion-avatar>
         <h2 style="color: #188b37; font-size: 1.9rem;">{{item.Targa}}</h2>
-        <p style="color: black">{{item.Marca}}</p>
+        <p style="color: black">{{item.Marca}} {{item.Modello}}</p>
         <ion-icon item-end name="play" *ngIf="getCounter(item) && isPlaying(item)"></ion-icon>
         <ion-icon item-end name="pause" *ngIf="getCounter(item) && !isPlaying(item)"></ion-icon>
         <ion-note item-end class="timer-badge" *ngIf="getCounter(item)">

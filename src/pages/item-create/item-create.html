@@ -4,11 +4,11 @@
     <ion-buttons left style="margin-top: 3px">
       <button ion-button (click)="cancel()" strong>
         <span color="primary">
-          Cancel
+          Annulla
         </span>
       </button>
     </ion-buttons>
-    <ion-title>{{!editMode ? 'Nuova pratica' : 'Edit practica'}}</ion-title>
+    <ion-title>{{!editMode ? 'Nuova pratica' : 'Modifica practica'}}</ion-title>
     <ion-buttons end style="margin-top: 3px">
       <button ion-button (click)="done()" [disabled]="!isReadyToSave" strong>
         <span color="primary">

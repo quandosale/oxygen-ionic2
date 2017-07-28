@@ -22,13 +22,13 @@ export class ListMasterPage implements OnInit {
   currentItems: Item[];
   itemsFiltered: Item[] = [];
   loader: Loading;
-  statoID: number = 3;
+  statoID: number = 4;
   isSearching: Boolean = false;
   filterString: string = "";
   timerList: any;
   counterList: any = {};
 
-  practicaType = ['', 'Aperta', 'Prenotata', 'In lavorazione', 'Ultimata', 'Consegnata'];
+  practicaType = ['', 'Aperta', 'Prenotata', 'Accettata', 'In lavorazione', 'Ultimata', 'Consegnata'];
 
   constructor(public navParams: NavParams,
     public sync: Sync,

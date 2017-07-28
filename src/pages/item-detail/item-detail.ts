@@ -20,7 +20,7 @@ export class ItemDetailPage implements OnInit {
   startTime: Date;
 
   isTempoAvailable: Boolean = false;
-  practicaTypeList = ['', 'Aperta', 'Prenotata', 'In lavorazione', 'Ultimata', 'Consegnata'];
+  practicaTypeList = ['', 'Aperta', 'Prenotata', 'Accettata', 'In lavorazione', 'Ultimata', 'Consegnata'];
   practicaType: String;
 
   lavoID: number;
@@ -31,7 +31,7 @@ export class ItemDetailPage implements OnInit {
   constructor(public loadingCtrl: LoadingController, public navCtrl: NavController, navParams: NavParams, public items: Items, public timerManager: TimerManager, public alertCtrl: AlertController) {
     this.item = navParams.get('item');
     if (this.item.Lavorazione)
-      if (this.item.Lavorazione.StatoID == 3) { this.isTempoAvailable = true; this.lavoID = this.item.Lavorazione.ID; }
+      if (this.item.Lavorazione.StatoID == 4) { this.isTempoAvailable = true; this.lavoID = this.item.Lavorazione.ID; }
       else this.practicaType = this.practicaTypeList[this.item.Lavorazione.StatoID];
     else
       this.practicaType = this.practicaTypeList[1];

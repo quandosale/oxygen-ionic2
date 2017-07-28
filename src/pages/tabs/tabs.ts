@@ -25,7 +25,7 @@ export class TabsPage {
     translateService.get(['TAB1_TITLE', 'TAB2_TITLE', 'TAB3_TITLE']).subscribe(values => {
       this.tab1Title = "Tempo";
       this.tab2Title = "Foto";
-      this.tab3Title = "Document";
+      this.tab3Title = "Documenti";
     });
     console.log(this.params); // returns NavParams {data: Object}
   }

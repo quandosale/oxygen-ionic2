@@ -50,7 +50,7 @@ export class Items {
             let data = res.json().data;
             this.items[statoID] = data;
             this.storage.set(this.ITEMS_KEY, this.items);
-            if (statoID == 3) {
+            if (statoID == 4) {
               return this._loadTotalTime(this.items[statoID], auth).then(res => data);
             }
             else

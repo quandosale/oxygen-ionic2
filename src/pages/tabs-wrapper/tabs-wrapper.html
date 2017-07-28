@@ -5,7 +5,7 @@
     <ion-buttons end style="margin-top: 3px" *ngIf="tabTitle!='Foto' && tabTitle!='Document'">
       <button ion-button (click)="editItem()" strong>
         <span color="primary">
-          Edit
+          Modifica
         </span>
       </button>
     </ion-buttons>
@@ -14,7 +14,7 @@
         <ion-icon name="more"></ion-icon>
       </button>
       <button ion-button (click)="done($event)" *ngIf="action" [disabled]="(selectedPhotoes.length==0 && tabTitle=='Foto') || (selectedDocuments.length==0 && tabTitle=='Document') ">
-        Done
+        Fatto
       </button>
     </ion-buttons>
   </ion-navbar>

@@ -57,7 +57,7 @@ export class TabsWrapperPage {
     this.tabTitle = tabTitle;
     console.log(this.tabTitle, this.item);
     if (this.item.Lavorazione && tabTitle == "Detagglio")
-      if (this.item.Lavorazione.StatoID == 3)
+      if (this.item.Lavorazione.StatoID == 4)
         this.tabTitle = "Tempo";
   }
   presentPopover() {
