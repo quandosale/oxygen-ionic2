@@ -19,7 +19,7 @@
   <input type="file" id="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)"
   />
   <div class="masonry" *ngIf="documents">
-    <div class="masonry-item" *ngFor="let document of documents; let i = index;" (click)="selectDocument(document, i)">
+    <div class="masonry-item" *ngFor="let document of documents; let i = index;" (click)="selectDocument(document, i)" tappable>
       <ion-checkbox [(ngModel)]="check[i]" *ngIf="action"></ion-checkbox>
       <!-- <a href="https://vadimdez.github.io/ng2-pdf-viewer/pdf-test.pdf" target="__blank" style="display: grid;"> -->
       <a [href]="'http://oxygen2.ilcarrozziere.it/' + document.Url" target="__blank" style="display: grid;">
