@@ -57,7 +57,7 @@ export class ListMasterPage implements OnInit {
 
 
   ionViewDidLoad() {
-    this.itemsFiltered = this.currentItems.slice();
+    // this.itemsFiltered = this.currentItems.slice();
     console.log(this.currentItems, 'viewdidload');
   }
 
@@ -88,7 +88,7 @@ export class ListMasterPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.itemsFiltered = this.currentItems.slice();
+    // this.itemsFiltered = this.currentItems.slice();
     console.log(this.currentItems, 'ionviewwillenter');
     this.counterList = {};
     localStorage.setItem('exitOnceAgain', '0');
