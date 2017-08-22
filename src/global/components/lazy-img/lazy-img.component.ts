@@ -1,3 +1,4 @@
+import { API_URL, SERVER_NAME } from '../../common';
 import { Settings } from '../../../providers/settings';
 import { Component, Input, OnInit } from '@angular/core';
 
@@ -18,7 +19,6 @@ export class LazyImgComponent {
   @Input() inputSrc: any;
   @Input() isDocument: any;
   @Input() action: any = null;
-  server_url: string = 'http://oxygen2.ilcarrozziere.it';
 
   public placeholderActive: boolean = true;
   thumbnail: string;
@@ -30,13 +30,14 @@ export class LazyImgComponent {
   ngOnInit() {
     if (this.isDocument) {
       this.thumbnailReady = true;
-      if (!this.inputSrc.IsImage)
-        this.thumbnail = this.server_url + '/' + this.inputSrc.Url.replace('.pdf', '_thumb.jpg?height=300&width=300&mode=crop');
+      if (!this.inputSrc.IsImage) {
+        this.thumbnail = SERVER_NAME +  this.inputSrc.Url.replace('.pdf', '_thumb.jpg?height=200&width=200&mode=crop');
+      }
       else
-        this.thumbnail = 'http://oxygen2.ilcarrozziere.it/' + this.inputSrc.Url + '?height=300&width=300&mode=crop';
+        this.thumbnail = SERVER_NAME + this.inputSrc.Url + '?height=200&width=200&mode=crop';
     } else {
       this.settings.getAuth().then(auth => {
-        this.thumbnail = `http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineGet?ID=${this.inputSrc.ID}&width=300&&height=300&mode=crop&user=${auth.user}&key=${auth.key}`;
+        this.thumbnail = API_URL + `PraticaImmagineGetThumb?ID=${this.inputSrc.ID}&width=200&&height=200&mode=crop&user=${auth.user}&key=${auth.key}`;
         this.thumbnailReady = true;
       })
     }

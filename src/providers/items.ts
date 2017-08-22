@@ -1,3 +1,4 @@
+import { API_URL } from '../global/common';
 import { Operation, Sync } from './sync';
 import { NetState } from './network';
 import { variable } from '@angular/compiler/src/output/output_ast';
@@ -267,7 +268,7 @@ export class Items {
           key: auth.key,
           ID: photoID
         };
-        let promise = $.post("http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineRemove", data)
+        let promise = $.post(API_URL + "PraticaImmagineRemove", data)
           .done(res => res).fail(err => err);
         promises.push(promise);
       });
@@ -331,7 +332,7 @@ export class Items {
   getPhotoes(practicaID) {
     if (this.connection.isAvailable()) {
       return this.settings.getAuth().then(auth => {
-        var url = `http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineList?user=${auth.user}&key=${auth.key}&PraticaID=${practicaID}`;
+        var url = API_URL + `PraticaImmagineList?user=${auth.user}&key=${auth.key}&PraticaID=${practicaID}`;
         return $.post(url)
           .done(res => {
             this.storage.get(this.PHOTOS_KEY).then(photoesData => {
@@ -374,7 +375,7 @@ export class Items {
           key: auth.key,
           ID: photoID
         };
-        let promise = $.post("http://oxygen2.ilcarrozziere.it/Api/PraticaDocumentoRemove", data)
+        let promise = $.post(API_URL + "PraticaDocumentoRemove", data)
           .done(res => res).fail(err => err);
         promises.push(promise);
       });
@@ -438,7 +439,7 @@ export class Items {
   getDocuments(practicaID) {
     if (this.connection.isAvailable()) {
       return this.settings.getAuth().then(auth => {
-        var url = `http://oxygen2.ilcarrozziere.it/Api/PraticaDocumentoList?user=${auth.user}&key=${auth.key}&PraticaID=${practicaID}`;
+        var url = API_URL + `PraticaDocumentoList?user=${auth.user}&key=${auth.key}&PraticaID=${practicaID}`;
         return $.post(url)
           .done(res => {
             console.log(res, 'document');

@@ -1,3 +1,4 @@
+import { API_URL } from '../../global/common';
 import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -21,7 +22,7 @@ export class PhotoPage {
     item: any;
     loader: Loading;
     photoes: Array<any> = [];
-    server_url: string = 'http://oxygen2.ilcarrozziere.it';
+    server_url: string = API_URL;
 
     constructor(private photoViewer: PhotoViewer, public loadingCtrl: LoadingController, private imagePicker: ImagePicker, public navCtrl: NavController, private navParams: NavParams, private items: Items, private camera: Camera) {
         this.item = navParams.get('item');

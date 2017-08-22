@@ -42,6 +42,7 @@ export class NetState {
         // this.platform.ready().then(() => {
         //     console.log(navigator.onLine);
         // });
+        console.log(navigator.onLine, 'net status');
         return navigator.onLine;
     }
 }

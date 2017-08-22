@@ -1,3 +1,4 @@
+import { API_URL } from '../global/common';
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -10,7 +11,6 @@ declare var $: any;
  */
 @Injectable()
 export class Api {
-  url: string = 'http://oxygen2.ilcarrozziere.it/Api';
 
   constructor(public http: Http, public settings: Settings, private transfer: Transfer, private device: Device) {
   }
@@ -31,24 +31,24 @@ export class Api {
       options.search = !options.search && p || options.search;
     }
 
-    return this.http.get(this.url + '/' + endpoint, options);
+    return this.http.get(API_URL + endpoint, options);
   }
 
   post(endpoint: string, body: any, options?: RequestOptions) {
     console.log(body);
-    return this.http.post(this.url + '/' + endpoint, body, options);
+    return this.http.post(API_URL + endpoint, body, options);
   }
 
   put(endpoint: string, body: any, options?: RequestOptions) {
-    return this.http.put(this.url + '/' + endpoint, body, options);
+    return this.http.put(API_URL + endpoint, body, options);
   }
 
   delete(endpoint: string, options?: RequestOptions) {
-    return this.http.delete(this.url + '/' + endpoint, options);
+    return this.http.delete(API_URL + endpoint, options);
   }
 
   patch(endpoint: string, body: any, options?: RequestOptions) {
-    return this.http.put(this.url + '/' + endpoint, body, options);
+    return this.http.put(API_URL + endpoint, body, options);
   }
 
 
@@ -56,7 +56,7 @@ export class Api {
     return this.settings.getAuth().then(auth => {
       item.user = auth.user;
       item.key = auth.key;
-      return $.post("http://oxygen2.ilcarrozziere.it/Api/PraticaInsert", item)
+      return $.post(API_URL + "Api/PraticaInsert", item)
         .done(res => {
           return res;
         })
@@ -69,7 +69,7 @@ export class Api {
     return this.settings.getAuth().then(auth => {
       item.user = auth.user;
       item.key = auth.key;
-      return $.post("http://oxygen2.ilcarrozziere.it/Api/PraticaUpdate", item)
+      return $.post(API_URL + "Api/PraticaUpdate", item)
         .done(res => {
           return res;
         })
@@ -82,7 +82,7 @@ export class Api {
   postLovo(item: any, date: Date, secs: Number) {
     console.log(item.ID, 'postLovo')
     return this.settings.getAuth().then(auth => {
-      var url = "http://oxygen2.ilcarrozziere.it/Api/LavorazioneInsert";
+      var url = API_URL + "Api/LavorazioneInsert";
       var data = {
         user: auth.user,
         key: auth.key,
@@ -92,7 +92,7 @@ export class Api {
         ID: ''
       }
       if (item.Lavorazione != null) {
-        url = "http://oxygen2.ilcarrozziere.it/Api/LavorazioneUpdate";
+        url = API_URL + "Api/LavorazioneUpdate";
         data.ID = item.Lavorazione.ID;
       }
       return $.post(url, data)
@@ -110,7 +110,7 @@ export class Api {
     var uuid = this.device.uuid || "unknown";
     console.log(uuid, 'uuid');
     return this.settings.getAuth().then(auth => {
-      var url = "http://oxygen2.ilcarrozziere.it/Api/MarcaturaInsert";
+      var url = API_URL + "Api/MarcaturaInsert";
       var data = {
         user: auth.user,
         key: auth.key,
@@ -149,7 +149,7 @@ export class Api {
         }
       }
       console.log(photo);
-      return fileTransfer.upload(photo, 'http://oxygen2.ilcarrozziere.it/Api/PraticaImmagineAdd', options)
+      return fileTransfer.upload(photo, API_URL + 'Api/PraticaImmagineAdd', options)
         .then((data) => {
           return JSON.parse(data.response);
         }, (err) => {
@@ -177,7 +177,7 @@ export class Api {
         }
       }
       console.log(document);
-      return fileTransfer.upload(document, 'http://oxygen2.ilcarrozziere.it/Api/PraticaDocumentoAdd', options)
+      return fileTransfer.upload(document, API_URL + 'Api/PraticaDocumentoAdd', options)
         .then((data) => {
           return JSON.parse(data.response);
         }, (err) => {

@@ -109,7 +109,7 @@ export class ItemDetailPage implements OnInit {
   startCounter() {
     var self = this;
     this.counterTimer = setInterval(() => {
-      self.counter += 1000;
+      self.counter = self.timerManager.getTotalTime(self.lavoID) + self.items.totalTime[self.lavoID];
     }, 1000);
   }
 

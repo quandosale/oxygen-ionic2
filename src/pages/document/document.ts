@@ -1,3 +1,4 @@
+import { API_URL, SERVER_NAME } from '../../global/common';
 import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
@@ -22,11 +23,12 @@ export class DocumentPage {
     item: any;
     loader: Loading;
     documents: Array<any> = [];
-    server_url: string = 'http://oxygen2.ilcarrozziere.it';
+    server_url: String;
 
     constructor(private iab: InAppBrowser, private documentViewer: PhotoViewer, public loadingCtrl: LoadingController, private imagePicker: ImagePicker, public navCtrl: NavController, private navParams: NavParams, private items: Items, private camera: Camera) {
         this.item = navParams.get('item');
         console.log(this.item);
+        this.server_url = SERVER_NAME;
         this.items.actionListner().subscribe(res => {
             this.action = res;
         })
@@ -163,12 +165,8 @@ export class DocumentPage {
             this.loader.dismiss();
         });
     }
-    openPDF(url) {
-        const browser = this.iab.create('http://oxygen2.ilcarrozziere.it//_Private/Pratica\\96\\Documenti\\191\\R8mi.pdf');
-        browser.show();
-    }
 
     getDocThumbnail(url: string) {
-        return this.server_url + '/' + url.replace('.pdf', '_thumb.jpg?height=300&width=300&mode=crop');
+        return API_URL + url.replace('.pdf', '_thumb.jpg?height=300&width=300&mode=crop');
     }
 }

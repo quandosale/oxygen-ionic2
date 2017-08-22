@@ -88,7 +88,10 @@ export class ListMasterPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    // this.itemsFiltered = this.currentItems.slice();
+    if(!this.isSearching)
+      this.itemsFiltered = this.currentItems.slice();
+    else
+      this.itemsFiltered = this.itemsFiltered.slice();
     console.log(this.currentItems, 'ionviewwillenter');
     this.counterList = {};
     localStorage.setItem('exitOnceAgain', '0');

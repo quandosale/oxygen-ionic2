@@ -1,39 +1,40 @@
 <ion-content>
-
-  <div padding class="photo-button-group">
-    <button ion-button (click)="fromCamera()">
-        Nuova
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <ion-icon name="add"></ion-icon>
-    </button>
-
-    <button ion-button (click)="fromGallery()">
-        Rullino 
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <ion-icon name="attach"></ion-icon>
-    </button>
-  </div>
-
-  <button ion-button (click)="refresh()" id="refresh_documentlist" style="display:none">
-    </button>
-  <input type="file" id="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)"
-  />
-  <div class="masonry" *ngIf="documents">
-    <div class="masonry-item" *ngFor="let document of documents; let i = index;" (click)="selectDocument(document, i)" tappable>
-      <ion-checkbox [(ngModel)]="check[i]" *ngIf="action"></ion-checkbox>
-      <!-- <a href="https://vadimdez.github.io/ng2-pdf-viewer/pdf-test.pdf" target="__blank" style="display: grid;"> -->
-      <a [href]="'http://oxygen2.ilcarrozziere.it/' + document.Url" target="__blank" style="display: grid;">
-        <lazy-img [isDocument]="true" [inputSrc]="document" action='action' *ngIf="!document.IsImage"></lazy-img>
-      </a>
-      <lazy-img [isDocument]="true" [inputSrc]="document" [action]="action" *ngIf="!document.local && document.IsImage"></lazy-img>
-      <img imageViewer [src]="document.Url" style="display:block" *ngIf="document.local && document.IsImage" style="
-        height: calc(50vw - 2px);
-        width: 50vw;
-        object-fit: cover;
-        position: absolute;
-        padding-right: 2px;">
-       <div class="deletion-mask" style="width: 100%; height: 100%" *ngIf="check[i]"></div> 
+  
+    <div padding class="photo-button-group">
+      <button ion-button (click)="fromCamera()">
+          Nuova
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <ion-icon name="add"></ion-icon>
+      </button>
+  
+      <button ion-button (click)="fromGallery()">
+          Rullino 
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <ion-icon name="attach"></ion-icon>
+      </button>
     </div>
-  </div>
-
-</ion-content>
+  
+    <button ion-button (click)="refresh()" id="refresh_documentlist" style="display:none">
+      </button>
+    <input type="file" id="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)"
+    />
+    <div class="masonry" *ngIf="documents">
+      <div class="masonry-item" *ngFor="let document of documents; let i = index;" (click)="selectDocument(document, i)" tappable>
+        <ion-checkbox [(ngModel)]="check[i]" *ngIf="action"></ion-checkbox>
+        <!-- <a href="https://vadimdez.github.io/ng2-pdf-viewer/pdf-test.pdf" target="__blank" style="display: grid;"> -->
+        <a [href]="server_url + document.Url" target="__blank" style="display: grid;">
+          <lazy-img [isDocument]="true" [inputSrc]="document" action='action' *ngIf="!document.IsImage"></lazy-img>
+        </a>
+        <lazy-img [isDocument]="true" [inputSrc]="document" [action]="action" *ngIf="!document.local && document.IsImage"></lazy-img>
+        <img imageViewer [src]="document.Url" style="display:block" *ngIf="document.local && document.IsImage" style="
+          height: calc(50vw - 2px);
+          width: 50vw;
+          object-fit: cover;
+          position: absolute;
+          padding-right: 2px;">
+         <div class="deletion-mask" style="width: 100%; height: 100%" *ngIf="check[i]"></div> 
+      </div>
+    </div>
+  
+  </ion-content>
+  
